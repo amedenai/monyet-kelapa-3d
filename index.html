@@ -3,184 +3,233 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Monyet Manjat Kelapa 3D - Hutan Sultan</title>
-<script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js","three/addons/":"https://unpkg.com/three@0.160.0/examples/jsm/"}}</script>
+<title>Monyet Kelapa 4D - Upin Ipin Style</title>
+<script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js"}}</script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Fredoka',sans-serif;background:#0a2a12;overflow:hidden;touch-action:none;user-select:none}
-#uiTop{position:fixed;top:0;left:0;right:0;padding:8px 10px;display:flex;justify-content:space-between;z-index:20;background:linear-gradient(rgba(0,0,0,.6),transparent)}
-.u{background:rgba(255,255,255,.9);border:2px solid #fff;border-radius:14px;padding:5px 12px;font-weight:800;font-size:12px;color:#1a3d1a;box-shadow:0 4px 0 #2d6a2d}
-#staminaWrap{position:fixed;top:50px;left:10px;right:10px;height:14px;background:rgba(0,0,0,.5);border-radius:20px;border:2px solid #fff;z-index:20;overflow:hidden}
-#staminaBar{height:100%;width:100%;background:linear-gradient(90deg,#22c55e,#facc15);transition:width .2s}
-#controls{position:fixed;bottom:0;left:0;right:0;padding:10px;display:flex;justify-content:space-between;z-index:20}
-.ctrl{width:90px;height:90px;border-radius:50%;border:3px solid #fff;background:rgba(255,255,255,.85);font-size:32px;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 0 rgba(0,0,0,.3);font-weight:800}
-.ctrl:active{transform:translateY(4px);box-shadow:0 2px 0 rgba(0,0,0,.3)}
-#climbBtn{width:140px;height:90px;border-radius:24px;background:linear-gradient(#22c55e,#16a34a);color:#fff;font-size:16px}
-#menu{position:fixed;inset:0;z-index:50;background:radial-gradient(ellipse at center,#1a5a2a 0%,#0a2a12 80%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center}
-.big{padding:16px 28px;border-radius:20px;border:3px solid #fff;font-weight:800;font-size:18px;margin:8px;background:linear-gradient(#facc15,#eab308);box-shadow:0 6px 0 #a16207;color:#000}
-#toast{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,.85);color:#fff;padding:14px 22px;border-radius:16px;font-weight:800;z-index:60;display:none;border:2px solid #fff}
+body{background:#87ceeb;overflow:hidden;font-family:'Comic Sans MS',cursive;touch-action:none}
+#hud{position:fixed;top:0;left:0;right:0;padding:8px;display:flex;justify-content:space-between;z-index:20}
+.h{background:linear-gradient(#fff,#fef08a);border:3px solid #000;border-radius:20px;padding:6px 14px;font-weight:900;font-size:13px;box-shadow:4px 4px 0 #000}
+#stam{position:fixed;top:52px;left:10px;right:10px;height:18px;background:#fff;border:3px solid #000;border-radius:20px;z-index:20;overflow:hidden}
+#stamBar{height:100%;width:100%;background:linear-gradient(90deg,#22c55e,#facc15);transition:width .2s}
+#controls{position:fixed;bottom:8px;left:0;right:0;padding:8px;display:flex;justify-content:space-between;z-index:20}
+.c{width:88px;height:88px;border-radius:50%;border:3px solid #000;background:#fff;font-size:28px;display:flex;align-items:center;justify-content:center;box-shadow:0 5px 0 #000;font-weight:900}
+.c:active{transform:translateY(4px);box-shadow:0 1px 0 #000}
+#climb{width:148px;border-radius:28px;background:linear-gradient(#22c55e,#16a34a);color:#fff;font-size:14px;text-align:center;line-height:1.1}
+#menu{position:fixed;inset:0;z-index:50;background:radial-gradient(circle at top,#87ceeb 0%,#22c55e 50%,#16a34a 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:18px;text-align:center}
+.btn{padding:16px 32px;border-radius:30px;border:4px solid #000;font-weight:900;font-size:18px;background:linear-gradient(#facc15,#f59e0b);box-shadow:0 6px 0 #000;margin:8px}
+.btn:active{transform:translateY(4px);box-shadow:0 2px 0 #000}
+#toast{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#000;color:#fff;padding:14px 24px;border-radius:20px;border:3px solid #fff;font-weight:900;z-index:60;display:none}
 </style>
 </head>
 <body>
-<div id="uiTop">
-<div class="u">🌴 <span id="height">0</span>m</div>
-<div class="u">🥥 <span id="coco">0</span> / 🍌 <span id="banana">0</span></div>
-<div class="u">⭐ <span id="score">0</span></div>
+<div id="hud">
+<div class="h">🌴 <span id="hgt">0</span>m</div>
+<div class="h">🥥 <span id="cc">0</span> 🍌 <span id="bb">0</span></div>
+<div class="h">⭐ <span id="sc">0</span></div>
 </div>
-<div id="staminaWrap"><div id="staminaBar"></div></div>
+<div id="stam"><div id="stamBar"></div></div>
 <div id="controls">
-<div class="ctrl" id="leftBtn">◀️</div>
-<div class="ctrl" id="climbBtn">🧗 MANJAT! Tahan</div>
-<div class="ctrl" id="rightBtn">▶️</div>
+<div class="c" id="lBtn">◀️</div>
+<div class="c" id="climb">🧗<br>MANJAT!</div>
+<div class="c" id="rBtn">▶️</div>
 </div>
 <div id="menu">
-<div style="font-size:70px">🐒🌴🥥</div>
-<h1 style="color:#fff;font-size:28px;line-height:1">MONYET MANJAT<br><span style="color:#facc15">POHON KELAPA 3D</span></h1>
-<p style="color:#bbf7d0;font-size:12px;margin:8px;max-width:320px">Monyet Kiko mau panjat pohon kelapa 30 meter di tengah hutan! Hindari dahan, lebah, ular! Kumpulin kelapa & pisang!</p>
-<div style="background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.2);border-radius:14px;padding:10px;margin:10px;width:100%;max-width:340px;text-align:left;color:#fff;font-size:11px">
-<b>🎮 CARA MAIN:</b><br>
-• Tahan tombol MANJAT di tengah untuk naik<br>
-• Kiri/Kanan untuk geser hindari rintangan<br>
-• Stamina hijau jangan sampai habis!<br>
-• Sampai puncak 30m = menang!
-</div>
-<button class="big" onclick="startGame()">▶️ MULAI MANJAT!</button>
-<div style="color:#86efac;font-size:10px;margin-top:8px">🌲 Hutan 3D • 🐒 Animasi manjat • 🔊 Suara hutan</div>
+<div style="font-size:80px">🐒🌴</div>
+<h1 style="font-size:30px;color:#000;text-shadow:3px 3px 0 #fff;line-height:1">MONYET KELAPA<br><span style="color:#facc15;text-shadow:3px 3px 0 #000">4D UPIN IPIN</span></h1>
+<p style="background:#fff;border:3px solid #000;border-radius:16px;padding:8px;margin:10px;max-width:340px;font-weight:700;font-size:12px">Kiko pakai baju kuning kayak Upin! Panjat pohon kelapa di Kampung Durian Runtuh! Ada rumah Opah & ayam!</p>
+<button class="btn" onclick="start()">▶️ MULAI MANJAT 4D!</button>
+<div style="font-size:10px;font-weight:800;margin-top:6px">✨ Cel-Shading Upin Ipin • 🏡 Kampung 3D • 🦋 Kupu-kupu</div>
 </div>
 <div id="toast"></div>
 <script type="module">
 import * as THREE from 'three';
-let scene,camera,renderer,tree,trunk,monkey,leaves,coconuts=[],obstacles=[],collects=[],forest=[],ground;
-let state={playing:false,height:0,stamina:100,coco:0,banana:0,score:0,speed:0.08,side:0,climbing:false,falling:false};
-let keys={left:false,right:false,climb:false};
-let audio=null;
-function initAudio(){if(audio)return;audio=new(window.AudioContext||window.webkitAudioContext)()}
-function beep(f,d,type='sine'){if(!audio)return;let o=audio.createOscillator(),g=audio.createGain();o.frequency.value=f;o.type=type;g.gain.setValueAtTime(0.25,audio.currentTime);g.gain.exponentialRampToValueAtTime(0.001,audio.currentTime+d);o.connect(g);g.connect(audio.destination);o.start();o.stop(audio.currentTime+d)}
+let scene,camera,renderer,tree,monkey,leaves,ground;
+let cocos=[],obs=[],cols=[],houses=[],birds=[];
+let state={playing:false,h:0,stam:100,cc:0,bb:0,sc:0,speed:0.1,side:0,climb:false,fall:false};
+let keys={l:false,r:false,c:false};
+let audioCtx=null;
+function initAudio(){if(audioCtx)return;audioCtx=new(window.AudioContext||window.webkitAudioContext)()}
+function beep(f,d,t='sine'){if(!audioCtx)return;let o=audioCtx.createOscillator(),g=audioCtx.createGain();o.frequency.value=f;o.type=t;g.gain.setValueAtTime(0.3,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+d);o.connect(g);g.connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+d)}
+
+// --- GRADIENT TOON MAP ---
+function makeToonGradient(){
+let c=document.createElement('canvas');c.width=256;c.height=1;let ctx=c.getContext('2d');let grad=ctx.createLinearGradient(0,0,256,0);grad.addColorStop(0,'#000');grad.addColorStop(0.4,'#444');grad.addColorStop(0.7,'#888');grad.addColorStop(1,'#fff');ctx.fillStyle=grad;ctx.fillRect(0,0,256,1);let tex=new THREE.CanvasTexture(c);tex.minFilter=THREE.NearestFilter;tex.magFilter=THREE.NearestFilter;return tex;
+}
+let toonGrad;
 
 function init(){
+toonGrad=makeToonGradient();
 scene=new THREE.Scene();
-scene.fog=new THREE.Fog(0x87ce8a,20,80);
-scene.background=new THREE.Color(0x87ce8a);
-camera=new THREE.PerspectiveCamera(60,innerWidth/innerHeight,0.1,1000);
-camera.position.set(0,3,8);
+scene.fog=new THREE.Fog(0xa7f3d0,15,90);
+scene.background=new THREE.Color(0x87ceeb);
+camera=new THREE.PerspectiveCamera(65,innerWidth/innerHeight,0.1,500);
+camera.position.set(0,4,9);
 renderer=new THREE.WebGLRenderer({antialias:true});
 renderer.setSize(innerWidth,innerHeight);
-renderer.shadowMap.enabled=true;
+renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
 document.body.appendChild(renderer.domElement);
 
-// lights
-scene.add(new THREE.AmbientLight(0xffffff,0.7));
-let sun=new THREE.DirectionalLight(0xfff7c2,1.2);sun.position.set(10,20,10);sun.castShadow=true;scene.add(sun);
+// LIGHTS - ala Upin Ipin terang cerah
+scene.add(new THREE.AmbientLight(0xffffff,0.9));
+let sun=new THREE.DirectionalLight(0xfffbe6,1.5);sun.position.set(15,25,10);sun.castShadow=true;sun.shadow.mapSize.width=2048;sun.shadow.mapSize.height=2048;scene.add(sun);
+let fill=new THREE.DirectionalLight(0x93c5fd,0.5);fill.position.set(-10,10,-10);scene.add(fill);
 
-// ground hutan
-let gGeo=new THREE.PlaneGeometry(200,200);let gMat=new THREE.MeshLambertMaterial({color:0x2d5a27});
-ground=new THREE.Mesh(gGeo,gMat);ground.rotation.x=-Math.PI/2;ground.receiveShadow=true;scene.add(ground);
-// semak jamur random
-for(let i=0;i<120;i++){let size=Math.random()*0.6+0.2;let m=new THREE.Mesh(new THREE.SphereGeometry(size,6,6),new THREE.MeshLambertMaterial({color:Math.random()>0.5?0x3a7d44:0x8B4513}));let ang=Math.random()*Math.PI*2;let dist=5+Math.random()*60;m.position.set(Math.cos(ang)*dist,0,Math.sin(ang)*dist-Math.random()*20);m.position.y=size*0.5;scene.add(m);forest.push(m);}
-// pohon hutan sekitar
-for(let i=0;i<60;i++){let h=4+Math.random()*8;let trunkH=new THREE.Mesh(new THREE.CylinderGeometry(0.3,0.5,h,6),new THREE.MeshLambertMaterial({color:0x5d4037}));let top=new THREE.Mesh(new THREE.ConeGeometry(1.5+Math.random()*1.5,3+Math.random()*2,6),new THREE.MeshLambertMaterial({color:0x2e7d32}));let g=new THREE.Group();g.add(trunkH);top.position.y=h/2+1;trunkH.position.y=h/2;g.add(top);let ang=Math.random()*Math.PI*2;let dist=8+Math.random()*50;g.position.set(Math.cos(ang)*dist,0,Math.sin(ang)*dist-5);scene.add(g);}
+// GROUND - sawah + kampung
+let gMat=new THREE.MeshToonMaterial({color:0x4ade80,gradientMap:toonGrad});
+ground=new THREE.Mesh(new THREE.PlaneGeometry(300,300),gMat);ground.rotation.x=-Math.PI/2;ground.receiveShadow=true;scene.add(ground);
+// sawah kotak
+for(let i=0;i<20;i++){let p=new THREE.Mesh(new THREE.PlaneGeometry(12,12),new THREE.MeshToonMaterial({color:i%2?0x86efac:0x22c55e,gradientMap:toonGrad}));p.rotation.x=-Math.PI/2;p.position.set((Math.random()-0.5)*120,0.02,(Math.random()-0.5)*120);p.receiveShadow=true;scene.add(p);}
 
-// pohon kelapa utama - 30m tinggi
+// RUMAH KAMPUNG ala Upin Ipin (rumah Opah)
+function makeHouse(x,z,scale=1){
+let g=new THREE.Group();
+let base=new THREE.Mesh(new THREE.BoxGeometry(5*scale,2.5*scale,4*scale),new THREE.MeshToonMaterial({color:0x8b5a2b,gradientMap:toonGrad}));base.position.y=1.2*scale;base.castShadow=true;g.add(base);
+let roof=new THREE.Mesh(new THREE.ConeGeometry(4*scale,2.5*scale,4),new THREE.MeshToonMaterial({color:0xd97706,gradientMap:toonGrad}));roof.position.y=3.2*scale;roof.rotation.y=Math.PI/4;roof.castShadow=true;g.add(roof);
+let pillar=new THREE.Mesh(new THREE.CylinderGeometry(0.1,0.1,1.2*scale,6),new THREE.MeshToonMaterial({color:0x5d4037,gradientMap:toonGrad}));for(let px of [-2,2])for(let pz of [-1.5,1.5]){let pl=pillar.clone();pl.position.set(px*scale,0.6*scale,pz*scale);g.add(pl);}
+g.position.set(x,0,z);scene.add(g);houses.push(g);
+}
+makeHouse(-18, -12,1.2);makeHouse(20,-15,1);makeHouse(-22,18,0.9);makeHouse(15,20,1.1);
+makeHouse(-10,25,0.8);makeHouse(25,10,0.9);
+
+// POHON KELAPA UTAMA - toon style mengkilap
 tree=new THREE.Group();
-trunk=new THREE.Mesh(new THREE.CylinderGeometry(0.35,0.6,30,12),new THREE.MeshLambertMaterial({color:0x8d6e63}));trunk.position.y=15;trunk.castShadow=true;tree.add(trunk);
-// daun kelapa di puncak
-leaves=new THREE.Group();leaves.position.y=30;
-for(let i=0;i<8;i++){let leaf=new THREE.Mesh(new THREE.CylinderGeometry(0.05,0.4,5,4),new THREE.MeshLambertMaterial({color:0x4caf50}));leaf.position.set(Math.cos(i/8*Math.PI*2)*0.3,0,Math.sin(i/8*Math.PI*2)*0.3);leaf.rotation.z=Math.PI/2.5;leaf.rotation.y=i/8*Math.PI*2;leaves.add(leaf);}
+let trunkMat=new THREE.MeshToonMaterial({color:0xa16207,gradientMap:toonGrad});
+let trunk=new THREE.Mesh(new THREE.CylinderGeometry(0.4,0.7,32,12),trunkMat);trunk.position.y=16;trunk.castShadow=true;tree.add(trunk);
+// lilitan akar ala kampung
+for(let i=0;i<32;i++){let ring=new THREE.Mesh(new THREE.TorusGeometry(0.45+i*0.006,0.04,4,12),new THREE.MeshToonMaterial({color:0x78350f,gradientMap:toonGrad}));ring.rotation.x=Math.PI/2;ring.position.y=i*0.95+0.5;tree.add(ring);}
+// daun kelapa - besar mengkilap
+leaves=new THREE.Group();leaves.position.y=32;
+let leafMat=new THREE.MeshToonMaterial({color:0x22c55e,gradientMap:toonGrad});
+for(let i=0;i<9;i++){let leaf=new THREE.Group();let main=new THREE.Mesh(new THREE.CylinderGeometry(0.08,0.55,6,5),leafMat);main.rotation.z=Math.PI/2.3;leaf.add(main);for(let j=0;j<5;j++){let sub=new THREE.Mesh(new THREE.PlaneGeometry(1.2,0.3),leafMat);sub.position.set(0.5+j*0.8,0,0);sub.rotation.z=0.2;leaf.add(sub);}leaf.rotation.y=i/9*Math.PI*2;leaf.rotation.x=0.3;leaves.add(leaf);}
 tree.add(leaves);
-// kelapa asli di atas
-for(let i=0;i<7;i++){let coco=new THREE.Mesh(new THREE.SphereGeometry(0.28,8,8),new THREE.MeshLambertMaterial({color:0x795548}));let ang=i/7*Math.PI*2;coco.position.set(Math.cos(ang)*0.4,29.2+Math.random()*0.3,Math.sin(ang)*0.4);tree.add(coco);coconuts.push(coco);}
+// kelapa - bulat mengkilap kayak bola
+let cocoMat=new THREE.MeshToonMaterial({color:0x65a30d,gradientMap:toonGrad});
+for(let i=0;i<8;i++){let c=new THREE.Mesh(new THREE.SphereGeometry(0.38,12,12),cocoMat);let a=i/8*Math.PI*2;c.position.set(Math.cos(a)*0.55,31+Math.random()*0.5,Math.sin(a)*0.55);c.castShadow=true;tree.add(c);cocos.push(c);}
 scene.add(tree);
 
-// monyet Kiko - low poly lucu
+// MONYET UPIN IPIN STYLE - kepala besar, mata besar, baju kuning!
 monkey=new THREE.Group();
-let body=new THREE.Mesh(new THREE.SphereGeometry(0.35,8,8),new THREE.MeshLambertMaterial({color:0x6d4c41}));body.position.y=0;
-let head=new THREE.Mesh(new THREE.SphereGeometry(0.3,8,8),new THREE.MeshLambertMaterial({color:0xd7ccc8}));head.position.y=0.45;
-let ear1=new THREE.Mesh(new THREE.SphereGeometry(0.12,6,6),new THREE.MeshLambertMaterial({color:0x8d6e63}));ear1.position.set(-0.28,0.45,0);
-let ear2=ear1.clone();ear2.position.x=0.28;
-let face=new THREE.Mesh(new THREE.SphereGeometry(0.18,6,6),new THREE.MeshLambertMaterial({color:0x3e2723}));face.scale.set(1,0.8,0.5);face.position.set(0,0.42,0.18);
-let tail=new THREE.Mesh(new THREE.CylinderGeometry(0.05,0.08,0.6,5),new THREE.MeshLambertMaterial({color:0x5d4037}));tail.position.set(0,-0.2,-0.35);tail.rotation.x=1;
-monkey.add(body,head,ear1,ear2,face,tail);
-monkey.position.set(0,0.6,0.6);monkey.scale.set(1.2,1.2,1.2);scene.add(monkey);
+// badan kecil
+let bodyMat=new THREE.MeshToonMaterial({color:0xfacc15,gradientMap:toonGrad}); // baju kuning Upin
+let body=new THREE.Mesh(new THREE.CapsuleGeometry(0.3,0.4,4,8),bodyMat);body.position.y=0.2;body.castShadow=true;monkey.add(body);
+// celana biru
+let pantsMat=new THREE.MeshToonMaterial({color:0x3b82f6,gradientMap:toonGrad});
+let pants=new THREE.Mesh(new THREE.CapsuleGeometry(0.22,0.3,4,8),pantsMat);pants.position.y=-0.25;monkey.add(pants);
+// kepala BULAT BESAR ala Upin Ipin
+let headMat=new THREE.MeshToonMaterial({color:0xffdbac,gradientMap:toonGrad});
+let head=new THREE.Mesh(new THREE.SphereGeometry(0.52,16,16),headMat);head.position.y=0.85;head.castShadow=true;monkey.add(head);
+// rambut coklat botak tengah (ala Upin Ipin)
+let hairMat=new THREE.MeshToonMaterial({color:0x78350f,gradientMap:toonGrad});
+let hair=new THREE.Mesh(new THREE.SphereGeometry(0.53,16,16,0,Math.PI*2,0,Math.PI/2.2),hairMat);hair.position.y=0.95;hair.rotation.x=Math.PI;monkey.add(hair);
+let jambul=new THREE.Mesh(new THREE.CapsuleGeometry(0.05,0.15,3,6),hairMat);jambul.position.set(0,1.35,0.15);jambul.rotation.z=-0.2;monkey.add(jambul);
+// telinga besar bulat
+let earMat=new THREE.MeshToonMaterial({color:0xffcc99,gradientMap:toonGrad});
+let earL=new THREE.Mesh(new THREE.SphereGeometry(0.18,10,10),earMat);earL.position.set(-0.5,0.85,0.05);monkey.add(earL);
+let earR=earL.clone();earR.position.x=0.5;monkey.add(earR);
+// mata BESAR mengkilap ala Upin Ipin
+function makeEye(x){
+let g=new THREE.Group();
+let white=new THREE.Mesh(new THREE.SphereGeometry(0.13,10,10),new THREE.MeshToonMaterial({color:0xffffff,gradientMap:toonGrad}));g.add(white);
+let iris=new THREE.Mesh(new THREE.SphereGeometry(0.07,8,8),new THREE.MeshToonMaterial({color:0x451a03,gradientMap:toonGrad}));iris.position.z=0.08;g.add(iris);
+let shine=new THREE.Mesh(new THREE.SphereGeometry(0.03,6,6),new THREE.MeshBasicMaterial({color:0xffffff}));shine.position.set(0.03,0.04,0.1);g.add(shine);
+g.position.set(x,0.9,0.4);return g;
+}
+monkey.add(makeEye(-0.16));monkey.add(makeEye(0.16));
+// mulut senyum
+let mouth=new THREE.Mesh(new THREE.TorusGeometry(0.08,0.02,4,8,Math.PI),new THREE.MeshToonMaterial({color:0x000000}));mouth.position.set(0,0.7,0.48);mouth.rotation.x=Math.PI;monkey.add(mouth);
+// tangan kaki bulat
+let limbMat=new THREE.MeshToonMaterial({color:0x8b5a2b,gradientMap:toonGrad});
+let armL=new THREE.Mesh(new THREE.CapsuleGeometry(0.08,0.3,4,6),limbMat);armL.position.set(-0.38,0.25,0);armL.rotation.z=0.3;monkey.add(armL);
+let armR=armL.clone();armR.position.x=0.38;armR.rotation.z=-0.3;monkey.add(armR);
+let legL=new THREE.Mesh(new THREE.CapsuleGeometry(0.09,0.28,4,6),limbMat);legL.position.set(-0.15,-0.55,0);monkey.add(legL);
+let legR=legL.clone();legR.position.x=0.15;monkey.add(legR);
+// ekor melingkar
+let tail=new THREE.Mesh(new THREE.TorusGeometry(0.18,0.05,4,10,Math.PI*1.5),limbMat);tail.position.set(0,-0.2,-0.3);tail.rotation.x=1.2;monkey.add(tail);
 
-// rintangan & collect di pohon
-function spawnObjects(){
-obstacles=[];collects=[];
-for(let y=3;y<29;y+=1.2+Math.random()*1.5){
-if(Math.random()<0.45){
-// rintangan: dahan, lebah, ular
-let type=Math.random()>0.5?'branch':(Math.random()>0.5?'bee':'snake');
+monkey.position.set(0,0.8,0.75);monkey.scale.set(1.35,1.35,1.35);scene.add(monkey);
+
+// OBSTACLE & COLLECT - visual Upin Ipin colorful
+function spawn(){
+obs=[];cols=[];
+for(let y=4;y<31;y+=1.3+Math.random()*1.2){
+if(Math.random()<0.5){
+let type=Math.random()>0.6?'branch':(Math.random()>0.5?'bee':'thorn');
 let obj;
-if(type==='branch'){obj=new THREE.Mesh(new THREE.BoxGeometry(1.5,0.15,0.3),new THREE.MeshLambertMaterial({color:0x4e342e}));obj.position.set((Math.random()-0.5)*1.2,y,0.5);}
-else if(type==='bee'){obj=new THREE.Group();let b=new THREE.Mesh(new THREE.SphereGeometry(0.18,6,6),new THREE.MeshLambertMaterial({color:0xffeb3b}));let wing=new THREE.Mesh(new THREE.SphereGeometry(0.12,4,4),new THREE.MeshLambertMaterial({color:0xffffff,transparent:true,opacity:0.6}));wing.position.x=0.15;obj.add(b,wing);obj.position.set((Math.random()-0.5)*1,y,0.6);}
-else{obj=new THREE.Mesh(new THREE.CylinderGeometry(0.08,0.1,0.9,5),new THREE.MeshLambertMaterial({color:0x388e3c}));obj.rotation.z=Math.PI/2;obj.position.set((Math.random()-0.5)*1,y,0.55);}
-obj.userData={type:type,y:y};tree.add(obj);obstacles.push(obj);
+if(type==='branch'){obj=new THREE.Mesh(new THREE.BoxGeometry(2,0.22,0.35),new THREE.MeshToonMaterial({color:0x78350f,gradientMap:toonGrad}));obj.position.set((Math.random()-0.5)*1.3,y,0.7);}
+else if(type==='bee'){obj=new THREE.Group();let b=new THREE.Mesh(new THREE.SphereGeometry(0.22,8,8),new THREE.MeshToonMaterial({color:0xfacc15,gradientMap:toonGrad}));let s=new THREE.Mesh(new THREE.SphereGeometry(0.22,8,8),new THREE.MeshToonMaterial({color:0x000000,gradientMap:toonGrad}));s.scale.set(1,0.3,1);s.position.y=0.05;let wing=new THREE.Mesh(new THREE.SphereGeometry(0.14,6,6),new THREE.MeshToonMaterial({color:0xffffff,transparent:true,opacity:0.8,gradientMap:toonGrad}));wing.position.x=0.18;obj.add(b,s,wing);obj.position.set((Math.random()-0.5)*1.1,y,0.75);}
+else{obj=new THREE.Mesh(new THREE.ConeGeometry(0.15,0.6,6),new THREE.MeshToonMaterial({color:0x16a34a,gradientMap:toonGrad}));obj.rotation.x=Math.PI;obj.position.set((Math.random()-0.5)*1,y,0.75);}
+obj.userData={type:type,y:y};tree.add(obj);obs.push(obj);
 }
-if(Math.random()<0.35){
-let isCoco=Math.random()>0.5;
-let col=new THREE.Mesh(new THREE.SphereGeometry(isCoco?0.22:0.18,8,8),new THREE.MeshLambertMaterial({color:isCoco?0x795548:0xffeb3b}));col.position.set((Math.random()-0.5)*0.8,y+0.5,0.6);col.userData={type:isCoco?'coco':'banana',y:y};tree.add(col);collects.push(col);
+if(Math.random()<0.38){
+let isCoco=Math.random()>0.45;
+let col=new THREE.Mesh(new THREE.SphereGeometry(isCoco?0.26:0.2,10,10),new THREE.MeshToonMaterial({color:isCoco?0x65a30d:0xfacc15,gradientMap:toonGrad}));if(!isCoco){col.scale.y=1.3;}col.position.set((Math.random()-0.5)*0.9,y+0.6,0.8);col.userData={type:isCoco?'coco':'banana',y:y};tree.add(col);cols.push(col);
 }
 }
+// kupu-kupu 4D - terbang di hutan
+for(let i=0;i<12;i++){let g=new THREE.Group();let w1=new THREE.Mesh(new THREE.PlaneGeometry(0.25,0.18),new THREE.MeshToonMaterial({color:Math.random()>0.5?0xec4899:0x38bdf8,side:THREE.DoubleSide,gradientMap:toonGrad}));let w2=w1.clone();w1.position.x=-0.14;w2.position.x=0.14;g.add(w1,w2);g.position.set((Math.random()-0.5)*30,5+Math.random()*20,(Math.random()-0.5)*30);g.userData={t:Math.random()*10,speed:0.3+Math.random()*0.6};scene.add(g);birds.push(g);}
 }
-spawnObjects();
-window.spawnObjects=spawnObjects;
+spawn();
 
 animate();
 }
 
-function toast(msg){let t=document.getElementById('toast');t.textContent=msg;t.style.display='block';setTimeout(()=>t.style.display='none',1500);}
+function toast(m){let t=document.getElementById('toast');t.textContent=m;t.style.display='block';setTimeout(()=>t.style.display='none',1500);}
 
-function checkCollision(){
-for(let o of obstacles){
-if(Math.abs(o.userData.y - state.height) < 0.5 && Math.abs(o.position.x - state.side) < 0.6){
-if(o.userData.type==='branch'){state.stamina-=25;toast('😵 Kena dahan! -25 stamina');beep(150,0.4,'sawtooth');}
-if(o.userData.type==='bee'){state.stamina-=35;toast('🐝 Disengat lebah! -35');beep(200,0.5,'square');}
-if(o.userData.type==='snake'){state.stamina-=30;toast('🐍 Ada ular! -30');beep(120,0.6,'sawtooth');}
-o.visible=false;setTimeout(()=>o.visible=true,2000);
-if(state.stamina<=0){state.falling=true;toast('💥 Kiko jatuh! Game Over!');}
+function check(){
+for(let o of obs){
+if(Math.abs(o.userData.y-state.h)<0.55 && Math.abs(o.position.x-state.side)<0.7){
+if(o.userData.type==='branch'){state.stam-=20;toast('😵 Aduh! Terlanggar dahan!');beep(120,0.4,'sawtooth');}
+if(o.userData.type==='bee'){state.stam-=35;toast('🐝 Alamak! Kena sengat lebah!');beep(300,0.5,'square');}
+if(o.userData.type==='thorn'){state.stam-=28;toast('🌵 Aduh duri!');beep(180,0.4,'triangle');}
+o.visible=false;setTimeout(()=>o.visible=true,1800);
+if(state.stam<=0){state.fall=true;toast('💥 Jatuh! Betul-betul!');}
 }
 }
-for(let c of collects){
-if(c.visible && Math.abs(c.userData.y - state.height) < 0.6 && Math.abs(c.position.x - state.side) < 0.7){
+for(let c of cols){
+if(c.visible && Math.abs(c.userData.y-state.h)<0.65 && Math.abs(c.position.x-state.side)<0.75){
 c.visible=false;
-if(c.userData.type==='coco'){state.coco++;state.score+=100;toast('🥥 Kelapa! +100');beep(600,0.2);setTimeout(()=>beep(900,0.2),100);}
-else{state.banana++;state.score+=50;state.stamina=Math.min(100,state.stamina+15);toast('🍌 Pisang! +stamina');beep(700,0.2);setTimeout(()=>beep(1000,0.2),100);}
+if(c.userData.type==='coco'){state.cc++;state.sc+=120;toast('🥥 Betul! Betul! Betul! Kelapa dapat!');beep(523,0.2);setTimeout(()=>beep(784,0.3),100);setTimeout(()=>beep(1046,0.3),200);}
+else{state.bb++;state.sc+=80;state.stam=Math.min(100,state.stam+18);toast('🍌 Sedapnya pisang! +stamina');beep(660,0.2);setTimeout(()=>beep(880,0.25),120);}
 }
 }
 }
 
-function updateUI(){document.getElementById('height').textContent=Math.floor(state.height);document.getElementById('coco').textContent=state.coco;document.getElementById('banana').textContent=state.banana;document.getElementById('score').textContent=state.score;document.getElementById('staminaBar').style.width=state.stamina+'%';document.getElementById('staminaBar').style.background=state.stamina>60?'linear-gradient(90deg,#22c55e,#84cc16)':state.stamina>30?'linear-gradient(90deg,#facc15,#fb923c)':'linear-gradient(90deg,#ef4444,#991b1b)';}
+function updateUI(){document.getElementById('hgt').textContent=Math.floor(state.h);document.getElementById('cc').textContent=state.cc;document.getElementById('bb').textContent=state.bb;document.getElementById('sc').textContent=state.sc;document.getElementById('stamBar').style.width=state.stam+'%';}
 
-let t=0;
+let time=0;
 function animate(){
-requestAnimationFrame(animate);t+=0.016;
-if(state.playing && !state.falling){
-if(state.climbing && state.stamina>0){state.height+=state.speed*(1+state.side*0.02);state.stamina-=0.18;monkey.rotation.y=Math.sin(t*12)*0.3;monkey.position.y=state.height+0.6;}
-// side movement
-if(keys.left)state.side=Math.max(-1.2,state.side-0.08);
-if(keys.right)state.side=Math.min(1.2,state.side+0.08);
+requestAnimationFrame(animate);time+=0.016;
+if(state.playing && !state.fall){
+if(state.climb && state.stam>0){state.h+=state.speed*(1.1);state.stam-=0.16;monkey.rotation.y=Math.sin(time*14)*0.25;monkey.position.y=state.h+0.8+Math.sin(time*10)*0.05;}
+if(keys.l)state.side=Math.max(-1.3,state.side-0.09);
+if(keys.r)state.side=Math.min(1.3,state.side+0.09);
 monkey.position.x=state.side;
-camera.position.y=state.height+2;camera.position.x=state.side*0.5;camera.lookAt(state.side,state.height+0.6,0);
-checkCollision();updateUI();
-if(state.height>=29.5){state.playing=false;toast('🏆 MENANG! Sampai puncak! '+state.score+' poin!');beep(523,0.3);setTimeout(()=>beep(659,0.3),150);setTimeout(()=>beep(784,0.4),300);setTimeout(()=>beep(1046,0.6),500);document.getElementById('menu').style.display='flex';document.getElementById('menu').innerHTML=`<div style="font-size:60px">🏆🐒🥥</div><h1 style="color:#fff">MENANG! ${Math.floor(state.height)}m</h1><p style="color:#bbf7d0">Skor: ${state.score} • Kelapa: ${state.coco}</p><button class="big" onclick="location.reload()">🔁 MAIN LAGI</button>`}
+// animasi tangan manjat
+monkey.children[8].rotation.x=Math.sin(time*12)*0.6;monkey.children[9].rotation.x=-Math.sin(time*12)*0.6;
+camera.position.y=state.h+3.2;camera.position.x=state.side*0.6;camera.lookAt(state.side,state.h+1,0);
+check();updateUI();
+// kupu-kupu terbang
+for(let b of birds){b.position.y+=Math.sin(time+b.userData.t)*0.008;b.rotation.y+=0.02;b.position.x+=Math.sin(time*0.5+b.userData.t)*0.01;}
+if(state.h>=31){state.playing=false;toast('🏆 BETUL BETUL BETUL! MENANG!');beep(523,0.3);setTimeout(()=>beep(659,0.3),150);setTimeout(()=>beep(784,0.3),300);setTimeout(()=>beep(1046,0.6),500);document.getElementById('menu').style.display='flex';document.getElementById('menu').innerHTML=`<div style="font-size:70px">🏆🐒</div><h1 style="font-size:28px">BETUL! MENANG!<br>${state.sc} POIN!</h1><p>Kelapa: ${state.cc} • Pisang: ${state.bb}</p><button class="btn" onclick="location.reload()">🔁 MAIN LAGI</button>`}
 }
-if(state.falling){
-state.height=Math.max(0,state.height-0.25);monkey.position.y=state.height+0.6;monkey.rotation.x+=0.2;camera.position.y=state.height+2;camera.lookAt(0,state.height,0);updateUI();
-if(state.height<=0){state.falling=false;state.playing=false;document.getElementById('menu').style.display='flex';document.getElementById('menu').innerHTML=`<div style="font-size:60px">💥🐒</div><h1 style="color:#fff">JATUH!</h1><p style="color:#fecaca">Tinggi: ${Math.floor(state.height)}m • Skor: ${state.score}</p><button class="big" onclick="location.reload()">🔁 COBA LAGI</button>`}
+if(state.fall){
+state.h=Math.max(0,state.h-0.3);monkey.position.y=state.h+0.8;monkey.rotation.x+=0.25;monkey.rotation.z+=0.15;camera.position.y=state.h+3;camera.lookAt(0,state.h,0);updateUI();
+if(state.h<=0.1){state.fall=false;state.playing=false;document.getElementById('menu').style.display='flex';document.getElementById('menu').innerHTML=`<div style="font-size:60px">💥🐒</div><h1>JATUH LA!</h1><p>Tinggi: ${Math.floor(state.h)}m • Skor: ${state.sc}</p><button class="btn" onclick="location.reload()">🔁 CUBA LAGI</button>`}
 }
 renderer.render(scene,camera);
 }
 
-window.startGame=function(){initAudio();document.getElementById('menu').style.display='none';state.playing=true;beep(440,0.2);setTimeout(()=>beep(660,0.3),150);}
+window.start=function(){initAudio();document.getElementById('menu').style.display='none';state.playing=true;beep(440,0.2);setTimeout(()=>beep(660,0.3),120);}
 
-function setupControls(){
-let add=(el,key)=>{let s=(e)=>{e.preventDefault();keys[key]=true;state.climbing=key==='climb'?true:state.climbing;initAudio()};let e=(ev)=>{ev.preventDefault();keys[key]=false;if(key==='climb')state.climbing=false};el.addEventListener('touchstart',s,{passive:false});el.addEventListener('touchend',e,{passive:false});el.addEventListener('mousedown',s);el.addEventListener('mouseup',e);el.addEventListener('mouseleave',e);};
-add(document.getElementById('leftBtn'),'left');add(document.getElementById('rightBtn'),'right');add(document.getElementById('climbBtn'),'climb');
-window.addEventListener('keydown',e=>{if(e.code==='ArrowLeft')keys.left=true;if(e.code==='ArrowRight')keys.right=true;if(e.code==='Space'){keys.climb=true;state.climbing=true}});
-window.addEventListener('keyup',e=>{if(e.code==='ArrowLeft')keys.left=false;if(e.code==='ArrowRight')keys.right=false;if(e.code==='Space'){keys.climb=false;state.climbing=false}});
+function setup(){
+let add=(el,key)=>{let s=e=>{e.preventDefault();keys[key]=true;if(key==='c')state.climb=true;initAudio()};let e1=ev=>{ev.preventDefault();keys[key]=false;if(key==='c')state.climb=false;};el.addEventListener('touchstart',s,{passive:false});el.addEventListener('touchend',e1,{passive:false});el.addEventListener('mousedown',s);el.addEventListener('mouseup',e1);el.addEventListener('mouseleave',e1);};
+add(document.getElementById('lBtn'),'l');add(document.getElementById('rBtn'),'r');add(document.getElementById('climb'),'c');
+window.addEventListener('keydown',e=>{if(e.code==='ArrowLeft')keys.l=true;if(e.code==='ArrowRight')keys.r=true;if(e.code==='Space'){keys.c=true;state.climb=true}});
+window.addEventListener('keyup',e=>{if(e.code==='ArrowLeft')keys.l=false;if(e.code==='ArrowRight')keys.r=false;if(e.code==='Space'){keys.c=false;state.climb=false}});
 }
-
-setupControls();init();
+setup();init();
 window.addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
 </script>
 </body>
-</html>￼Enter
+</html>
