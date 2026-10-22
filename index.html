@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Monyet Manjat Kelapa 3D - Hutan Sultan</title>
+<script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js","three/addons/":"https://unpkg.com/three@0.160.0/examples/jsm/"}}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Fredoka',sans-serif;background:#0a2a12;overflow:hidden;touch-action:none;user-select:none}
+#uiTop{position:fixed;top:0;left:0;right:0;padding:8px 10px;display:flex;justify-content:space-between;z-index:20;background:linear-gradient(rgba(0,0,0,.6),transparent)}
+.u{background:rgba(255,255,255,.9);border:2px solid #fff;border-radius:14px;padding:5px 12px;font-weight:800;font-size:12px;color:#1a3d1a;box-shadow:0 4px 0 #2d6a2d}
+#staminaWrap{position:fixed;top:50px;left:10px;right:10px;height:14px;background:rgba(0,0,0,.5);border-radius:20px;border:2px solid #fff;z-index:20;overflow:hidden}
+#staminaBar{height:100%;width:100%;background:linear-gradient(90deg,#22c55e,#facc15);transition:width .2s}
+#controls{position:fixed;bottom:0;left:0;right:0;padding:10px;display:flex;justify-content:space-between;z-index:20}
+.ctrl{width:90px;height:90px;border-radius:50%;border:3px solid #fff;background:rgba(255,255,255,.85);font-size:32px;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 0 rgba(0,0,0,.3);font-weight:800}
+.ctrl:active{transform:translateY(4px);box-shadow:0 2px 0 rgba(0,0,0,.3)}
+#climbBtn{width:140px;height:90px;border-radius:24px;background:linear-gradient(#22c55e,#16a34a);color:#fff;font-size:16px}
+#menu{position:fixed;inset:0;z-index:50;background:radial-gradient(ellipse at center,#1a5a2a 0%,#0a2a12 80%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center}
+.big{padding:16px 28px;border-radius:20px;border:3px solid #fff;font-weight:800;font-size:18px;margin:8px;background:linear-gradient(#facc15,#eab308);box-shadow:0 6px 0 #a16207;color:#000}
+#toast{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,.85);color:#fff;padding:14px 22px;border-radius:16px;font-weight:800;z-index:60;display:none;border:2px solid #fff}
+</style>
+</head>
+<body>
+<div id="uiTop">
+<div class="u">🌴 <span id="height">0</span>m</div>
+<div class="u">🥥 <span id="coco">0</span> / 🍌 <span id="banana">0</span></div>
+<div class="u">⭐ <span id="score">0</span></div>
+</div>
+<div id="staminaWrap"><div id="staminaBar"></div></div>
+<div id="controls">
+<div class="ctrl" id="leftBtn">◀️</div>
+<div class="ctrl" id="climbBtn">🧗 MANJAT! Tahan</div>
+<div class="ctrl" id="rightBtn">▶️</div>
+</div>
+<div id="menu">
+<div style="font-size:70px">🐒🌴🥥</div>
+<h1 style="color:#fff;font-size:28px;line-height:1">MONYET MANJAT<br><span style="color:#facc15">POHON KELAPA 3D</span></h1>
+<p style="color:#bbf7d0;font-size:12px;margin:8px;max-width:320px">Monyet Kiko mau panjat pohon kelapa 30 meter di tengah hutan! Hindari dahan, lebah, ular! Kumpulin kelapa & pisang!</p>
+<div style="background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.2);border-radius:14px;padding:10px;margin:10px;width:100%;max-width:340px;text-align:left;color:#fff;font-size:11px">
+<b>🎮 CARA MAIN:</b><br>
+• Tahan tombol MANJAT di tengah untuk naik<br>
+• Kiri/Kanan untuk geser hindari rintangan<br>
+• Stamina hijau jangan sampai habis!<br>
+• Sampai puncak 30m = menang!
+</div>
+<button class="big" onclick="startGame()">▶️ MULAI MANJAT!</button>
+<div style="color:#86efac;font-size:10px;margin-top:8px">🌲 Hutan 3D • 🐒 Animasi manjat • 🔊 Suara hutan</div>
+</div>
+<div id="toast"></div>
+<script type="module">
+import * as THREE from 'three';
+let scene,camera,renderer,tree,trunk,monkey,leaves,coconuts=[],obstacles=[],collects=[],forest=[],ground;
+let state={playing:false,height:0,stamina:100,coco:0,banana:0,score:0,speed:0.08,side:0,climbing:false,falling:false};
+let keys={left:false,right:false,climb:false};
+let audio=null;
+function initAudio(){if(audio)return;audio=new(window.AudioContext||window.webkitAudioContext)()}
+function beep(f,d,type='sine'){if(!audio)return;let o=audio.createOscillator(),g=audio.createGain();o.frequency.value=f;o.type=type;g.gain.setValueAtTime(0.25,audio.currentTime);g.gain.exponentialRampToValueAtTime(0.001,audio.currentTime+d);o.connect(g);g.connect(audio.destination);o.start();o.stop(audio.currentTime+d)}
+
+function init(){
+scene=new THREE.Scene();
+scene.fog=new THREE.Fog(0x87ce8a,20,80);
+scene.background=new THREE.Color(0x87ce8a);
+camera=new THREE.PerspectiveCamera(60,innerWidth/innerHeight,0.1,1000);
+camera.position.set(0,3,8);
+renderer=new THREE.WebGLRenderer({antialias:true});
+renderer.setSize(innerWidth,innerHeight);
+renderer.shadowMap.enabled=true;
+document.body.appendChild(renderer.domElement);
+
+// lights
+scene.add(new THREE.AmbientLight(0xffffff,0.7));
+let sun=new THREE.DirectionalLight(0xfff7c2,1.2);sun.position.set(10,20,10);sun.castShadow=true;scene.add(sun);
+
+// ground hutan
+let gGeo=new THREE.PlaneGeometry(200,200);let gMat=new THREE.MeshLambertMaterial({color:0x2d5a27});
+ground=new THREE.Mesh(gGeo,gMat);ground.rotation.x=-Math.PI/2;ground.receiveShadow=true;scene.add(ground);
+// semak jamur random
+for(let i=0;i<120;i++){let size=Math.random()*0.6+0.2;let m=new THREE.Mesh(new THREE.SphereGeometry(size,6,6),new THREE.MeshLambertMaterial({color:Math.random()>0.5?0x3a7d44:0x8B4513}));let ang=Math.random()*Math.PI*2;let dist=5+Math.random()*60;m.position.set(Math.cos(ang)*dist,0,Math.sin(ang)*dist-Math.random()*20);m.position.y=size*0.5;scene.add(m);forest.push(m);}
+// pohon hutan sekitar
+for(let i=0;i<60;i++){let h=4+Math.random()*8;let trunkH=new THREE.Mesh(new THREE.CylinderGeometry(0.3,0.5,h,6),new THREE.MeshLambertMaterial({color:0x5d4037}));let top=new THREE.Mesh(new THREE.ConeGeometry(1.5+Math.random()*1.5,3+Math.random()*2,6),new THREE.MeshLambertMaterial({color:0x2e7d32}));let g=new THREE.Group();g.add(trunkH);top.position.y=h/2+1;trunkH.position.y=h/2;g.add(top);let ang=Math.random()*Math.PI*2;let dist=8+Math.random()*50;g.position.set(Math.cos(ang)*dist,0,Math.sin(ang)*dist-5);scene.add(g);}
+
+// pohon kelapa utama - 30m tinggi
+tree=new THREE.Group();
+trunk=new THREE.Mesh(new THREE.CylinderGeometry(0.35,0.6,30,12),new THREE.MeshLambertMaterial({color:0x8d6e63}));trunk.position.y=15;trunk.castShadow=true;tree.add(trunk);
+// daun kelapa di puncak
+leaves=new THREE.Group();leaves.position.y=30;
+for(let i=0;i<8;i++){let leaf=new THREE.Mesh(new THREE.CylinderGeometry(0.05,0.4,5,4),new THREE.MeshLambertMaterial({color:0x4caf50}));leaf.position.set(Math.cos(i/8*Math.PI*2)*0.3,0,Math.sin(i/8*Math.PI*2)*0.3);leaf.rotation.z=Math.PI/2.5;leaf.rotation.y=i/8*Math.PI*2;leaves.add(leaf);}
+tree.add(leaves);
+// kelapa asli di atas
+for(let i=0;i<7;i++){let coco=new THREE.Mesh(new THREE.SphereGeometry(0.28,8,8),new THREE.MeshLambertMaterial({color:0x795548}));let ang=i/7*Math.PI*2;coco.position.set(Math.cos(ang)*0.4,29.2+Math.random()*0.3,Math.sin(ang)*0.4);tree.add(coco);coconuts.push(coco);}
+scene.add(tree);
+
+// monyet Kiko - low poly lucu
+monkey=new THREE.Group();
+let body=new THREE.Mesh(new THREE.SphereGeometry(0.35,8,8),new THREE.MeshLambertMaterial({color:0x6d4c41}));body.position.y=0;
+let head=new THREE.Mesh(new THREE.SphereGeometry(0.3,8,8),new THREE.MeshLambertMaterial({color:0xd7ccc8}));head.position.y=0.45;
+let ear1=new THREE.Mesh(new THREE.SphereGeometry(0.12,6,6),new THREE.MeshLambertMaterial({color:0x8d6e63}));ear1.position.set(-0.28,0.45,0);
+let ear2=ear1.clone();ear2.position.x=0.28;
+let face=new THREE.Mesh(new THREE.SphereGeometry(0.18,6,6),new THREE.MeshLambertMaterial({color:0x3e2723}));face.scale.set(1,0.8,0.5);face.position.set(0,0.42,0.18);
+let tail=new THREE.Mesh(new THREE.CylinderGeometry(0.05,0.08,0.6,5),new THREE.MeshLambertMaterial({color:0x5d4037}));tail.position.set(0,-0.2,-0.35);tail.rotation.x=1;
+monkey.add(body,head,ear1,ear2,face,tail);
+monkey.position.set(0,0.6,0.6);monkey.scale.set(1.2,1.2,1.2);scene.add(monkey);
+
+// rintangan & collect di pohon
+function spawnObjects(){
+obstacles=[];collects=[];
+for(let y=3;y<29;y+=1.2+Math.random()*1.5){
+if(Math.random()<0.45){
+// rintangan: dahan, lebah, ular
+let type=Math.random()>0.5?'branch':(Math.random()>0.5?'bee':'snake');
+let obj;
+if(type==='branch'){obj=new THREE.Mesh(new THREE.BoxGeometry(1.5,0.15,0.3),new THREE.MeshLambertMaterial({color:0x4e342e}));obj.position.set((Math.random()-0.5)*1.2,y,0.5);}
+else if(type==='bee'){obj=new THREE.Group();let b=new THREE.Mesh(new THREE.SphereGeometry(0.18,6,6),new THREE.MeshLambertMaterial({color:0xffeb3b}));let wing=new THREE.Mesh(new THREE.SphereGeometry(0.12,4,4),new THREE.MeshLambertMaterial({color:0xffffff,transparent:true,opacity:0.6}));wing.position.x=0.15;obj.add(b,wing);obj.position.set((Math.random()-0.5)*1,y,0.6);}
+else{obj=new THREE.Mesh(new THREE.CylinderGeometry(0.08,0.1,0.9,5),new THREE.MeshLambertMaterial({color:0x388e3c}));obj.rotation.z=Math.PI/2;obj.position.set((Math.random()-0.5)*1,y,0.55);}
+obj.userData={type:type,y:y};tree.add(obj);obstacles.push(obj);
+}
+if(Math.random()<0.35){
+let isCoco=Math.random()>0.5;
+let col=new THREE.Mesh(new THREE.SphereGeometry(isCoco?0.22:0.18,8,8),new THREE.MeshLambertMaterial({color:isCoco?0x795548:0xffeb3b}));col.position.set((Math.random()-0.5)*0.8,y+0.5,0.6);col.userData={type:isCoco?'coco':'banana',y:y};tree.add(col);collects.push(col);
+}
+}
+}
+spawnObjects();
+window.spawnObjects=spawnObjects;
+
+animate();
+}
+
+function toast(msg){let t=document.getElementById('toast');t.textContent=msg;t.style.display='block';setTimeout(()=>t.style.display='none',1500);}
+
+function checkCollision(){
+for(let o of obstacles){
+if(Math.abs(o.userData.y - state.height) < 0.5 && Math.abs(o.position.x - state.side) < 0.6){
+if(o.userData.type==='branch'){state.stamina-=25;toast('😵 Kena dahan! -25 stamina');beep(150,0.4,'sawtooth');}
+if(o.userData.type==='bee'){state.stamina-=35;toast('🐝 Disengat lebah! -35');beep(200,0.5,'square');}
+if(o.userData.type==='snake'){state.stamina-=30;toast('🐍 Ada ular! -30');beep(120,0.6,'sawtooth');}
+o.visible=false;setTimeout(()=>o.visible=true,2000);
+if(state.stamina<=0){state.falling=true;toast('💥 Kiko jatuh! Game Over!');}
+}
+}
+for(let c of collects){
+if(c.visible && Math.abs(c.userData.y - state.height) < 0.6 && Math.abs(c.position.x - state.side) < 0.7){
+c.visible=false;
+if(c.userData.type==='coco'){state.coco++;state.score+=100;toast('🥥 Kelapa! +100');beep(600,0.2);setTimeout(()=>beep(900,0.2),100);}
+else{state.banana++;state.score+=50;state.stamina=Math.min(100,state.stamina+15);toast('🍌 Pisang! +stamina');beep(700,0.2);setTimeout(()=>beep(1000,0.2),100);}
+}
+}
+}
+
+function updateUI(){document.getElementById('height').textContent=Math.floor(state.height);document.getElementById('coco').textContent=state.coco;document.getElementById('banana').textContent=state.banana;document.getElementById('score').textContent=state.score;document.getElementById('staminaBar').style.width=state.stamina+'%';document.getElementById('staminaBar').style.background=state.stamina>60?'linear-gradient(90deg,#22c55e,#84cc16)':state.stamina>30?'linear-gradient(90deg,#facc15,#fb923c)':'linear-gradient(90deg,#ef4444,#991b1b)';}
+
+let t=0;
+function animate(){
+requestAnimationFrame(animate);t+=0.016;
+if(state.playing && !state.falling){
+if(state.climbing && state.stamina>0){state.height+=state.speed*(1+state.side*0.02);state.stamina-=0.18;monkey.rotation.y=Math.sin(t*12)*0.3;monkey.position.y=state.height+0.6;}
+// side movement
+if(keys.left)state.side=Math.max(-1.2,state.side-0.08);
+if(keys.right)state.side=Math.min(1.2,state.side+0.08);
+monkey.position.x=state.side;
+camera.position.y=state.height+2;camera.position.x=state.side*0.5;camera.lookAt(state.side,state.height+0.6,0);
+checkCollision();updateUI();
+if(state.height>=29.5){state.playing=false;toast('🏆 MENANG! Sampai puncak! '+state.score+' poin!');beep(523,0.3);setTimeout(()=>beep(659,0.3),150);setTimeout(()=>beep(784,0.4),300);setTimeout(()=>beep(1046,0.6),500);document.getElementById('menu').style.display='flex';document.getElementById('menu').innerHTML=`<div style="font-size:60px">🏆🐒🥥</div><h1 style="color:#fff">MENANG! ${Math.floor(state.height)}m</h1><p style="color:#bbf7d0">Skor: ${state.score} • Kelapa: ${state.coco}</p><button class="big" onclick="location.reload()">🔁 MAIN LAGI</button>`}
+}
+if(state.falling){
+state.height=Math.max(0,state.height-0.25);monkey.position.y=state.height+0.6;monkey.rotation.x+=0.2;camera.position.y=state.height+2;camera.lookAt(0,state.height,0);updateUI();
+if(state.height<=0){state.falling=false;state.playing=false;document.getElementById('menu').style.display='flex';document.getElementById('menu').innerHTML=`<div style="font-size:60px">💥🐒</div><h1 style="color:#fff">JATUH!</h1><p style="color:#fecaca">Tinggi: ${Math.floor(state.height)}m • Skor: ${state.score}</p><button class="big" onclick="location.reload()">🔁 COBA LAGI</button>`}
+}
+renderer.render(scene,camera);
+}
+
+window.startGame=function(){initAudio();document.getElementById('menu').style.display='none';state.playing=true;beep(440,0.2);setTimeout(()=>beep(660,0.3),150);}
+
+function setupControls(){
+let add=(el,key)=>{let s=(e)=>{e.preventDefault();keys[key]=true;state.climbing=key==='climb'?true:state.climbing;initAudio()};let e=(ev)=>{ev.preventDefault();keys[key]=false;if(key==='climb')state.climbing=false};el.addEventListener('touchstart',s,{passive:false});el.addEventListener('touchend',e,{passive:false});el.addEventListener('mousedown',s);el.addEventListener('mouseup',e);el.addEventListener('mouseleave',e);};
+add(document.getElementById('leftBtn'),'left');add(document.getElementById('rightBtn'),'right');add(document.getElementById('climbBtn'),'climb');
+window.addEventListener('keydown',e=>{if(e.code==='ArrowLeft')keys.left=true;if(e.code==='ArrowRight')keys.right=true;if(e.code==='Space'){keys.climb=true;state.climbing=true}});
+window.addEventListener('keyup',e=>{if(e.code==='ArrowLeft')keys.left=false;if(e.code==='ArrowRight')keys.right=false;if(e.code==='Space'){keys.climb=false;state.climbing=false}});
+}
+
+setupControls();init();
+window.addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
+</script>
+</body>
+</html>￼Enter
