@@ -3,118 +3,202 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>MONYET BROS FIX 🐒</title>
+<title>💇‍♀️ GIRLS HAIR SALON - Cukur Rambut Cantik!</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;user-select:none;-webkit-tap-highlight-color:transparent}
-body{background:#5c94fc;overflow:hidden;font-family:Arial Black,monospace;touch-action:none}
-#c{display:block;width:100vw;height:100vh}
-#hud{position:fixed;top:0;left:0;right:0;padding:8px;display:flex;justify-content:space-between;z-index:10;color:#fff;text-shadow:2px 2px 0 #000;font-size:14px;font-weight:900}
-#controls{position:fixed;bottom:10px;left:10px;right:10px;display:flex;justify-content:space-between;z-index:10}
-.btn{width:68px;height:68px;border-radius:14px;background:#fff;border:3px solid #000;display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 6px 0 #000}
-.btn:active{transform:translateY(4px);box-shadow:0 2px 0 #000}
-#jump{width:88px;height:88px;border-radius:50%;background:#ff2222;color:#fff;font-weight:900}
-#menu{position:fixed;inset:0;z-index:100;background:linear-gradient(#5c94fc 0%,#00d000 80%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;text-align:center}
-.card{background:#fff;border:4px solid #000;border-radius:20px;padding:16px;max-width:360px;width:100%;box-shadow:8px 8px 0 #000}
-.b{width:100%;padding:14px;border-radius:12px;border:3px solid #000;background:#ff0000;color:#fff;font-weight:900;font-size:18px;margin-top:8px;box-shadow:0 5px 0 #000}
-.b-yellow{background:#ffcc00;color:#000}
+body{background:linear-gradient(135deg,#ff9ad5 0%,#ffd6ec 50%,#c084fc 100%);overflow:hidden;font-family:system-ui;font-weight:800;touch-action:none}
+#c{display:block;width:100vw;height:100vh;cursor:crosshair}
+#hud{position:fixed;top:0;left:0;right:0;padding:10px;display:flex;justify-content:space-between;z-index:20;pointer-events:none}
+.badge{background:#fff;border:3px solid #000;border-radius:100px;padding:8px 14px;box-shadow:4px 4px 0 #000;font-size:12px}
+#tools{position:fixed;bottom:10px;left:10px;right:10px;display:flex;gap:8px;z-index:20;overflow-x:auto;padding:4px}
+.tool{flex:0 0 72px;height:72px;border-radius:20px;background:#fff;border:3px solid #000;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:24px;box-shadow:0 5px 0 #000;transition:0.15s}
+.tool:active,.tool.active{transform:translateY(4px) scale(0.95);box-shadow:0 1px 0 #000;background:#ffcc00}
+.tool span{font-size:9px;margin-top:2px}
+#menu{position:fixed;inset:0;z-index:100;background:linear-gradient(135deg,#ff9ad5,#c084fc);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;text-align:center}
+.card{background:#fff;border:4px solid #000;border-radius:24px;padding:18px;max-width:360px;width:100%;box-shadow:8px 8px 0 #000}
+.btn{width:100%;padding:14px;border-radius:100px;border:3px solid #000;background:#ff1493;color:#fff;font-weight:900;font-size:16px;box-shadow:0 5px 0 #000;margin-top:8px}
+.btn:active{transform:translateY(4px);box-shadow:0 1px 0 #000}
+.btn-yellow{background:#ffcc00;color:#000}
+#customerBar{position:fixed;top:60px;left:50%;transform:translateX(-50%);background:#000;color:#fff;padding:8px 18px;border-radius:100px;font-size:11px;z-index:20;display:flex;gap:10px;align-items:center}
+.hair{position:absolute;width:3px;background:linear-gradient(#000,#654321);border-radius:2px;transform-origin:top center}
 </style>
 </head>
 <body>
 <canvas id="c"></canvas>
-<div id="hud"><div>🌍 1-1 ⏱️ <span id="time">400</span></div><div>⭐ <span id="score">0</span> 🥥 <span id="coins">0</span> ❤️ <span id="lives">3</span></div></div>
-<div id="controls"><div style="display:flex;gap:10px"><div class="btn" id="left">◀️</div><div class="btn" id="right">▶️</div></div><div style="display:flex;gap:10px"><div class="btn" id="run">💨</div><div class="btn" id="jump">⤴️</div></div></div>
-<div id="menu"><div style="font-size:60px">🐒🍄</div><h1 style="font-size:28px;color:#fff;text-shadow:4px 4px 0 #000;line-height:0.9">SUPER<br>MONYET<br>BROS</h1>
-<div class="card" style="margin-top:10px"><div style="font-size:12px;font-weight:800">Kumpulin 🥥, makan 🍌 biar gede, injak 🦀🐝!</div><div style="text-align:left;font-size:11px;margin:8px 0;background:#000;color:#fff;padding:8px;border-radius:10px">◀️▶️ Lari | 💨 Lari cepat | ⤴️ Loncat<br>100 🥥 = ❤️ nyawa extra!</div>
-<button class="b b-yellow" id="playBtn">▶️ MULAI SEKARANG!</button></div></div>
+<div id="hud"><div class="badge">💰 Rp <span id="money">0</span></div><div class="badge">⭐ <span id="stars">0</span> / 20</div><div class="badge">👧 <span id="cust">1</span>/5</div></div>
+<div id="customerBar"><div id="custFace" style="font-size:20px">👧</div><div><div id="custName" style="font-weight:900">Siti - Rambut Kusut!</div><div id="custWant" style="font-size:10px;opacity:0.8">Mau: Bob Pendek Rapi!</div></div><div id="timer" style="background:#ffcc00;color:#000;padding:4px 8px;border-radius:20px;font-size:11px">⏱️ 60s</div></div>
+<div id="tools">
+<div class="tool active" data-tool="scissor">✂️<span>GUNTING</span></div>
+<div class="tool" data-tool="razor">🪒<span>CUKUR</span></div>
+<div class="tool" data-tool="comb">🪮<span>SISIR</span></div>
+<div class="tool" data-tool="dryer">💨<span>DRYER</span></div>
+<div class="tool" data-tool="pink">🎨<span>PINK</span></div>
+<div class="tool" data-tool="blue">💙<span>BIRU</span></div>
+<div class="tool" data-tool="blonde">👱<span>BLONDE</span></div>
+<div class="tool" data-tool="spray">✨<span>GLITTER</span></div>
+</div>
+<div id="menu"><div style="font-size:60px">💇‍♀️💖✂️</div><h1 style="font-size:30px;line-height:0.9;color:#fff;text-shadow:4px 4px 0 #000">GIRLS<br>HAIR SALON<br><span style="background:#000;color:#ffcc00;padding:2px 10px;border-radius:12px;font-size:18px">SATISFYING!</span></h1>
+<div class="card" style="margin-top:12px"><div style="font-size:12px;line-height:1.3">💖 Jadi penata rambut paling cantik! Gunting, warnai, bikin pelanggan happy! 100% satisfying kayak ASMR TikTok!</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:10px 0;font-size:10px"><div style="background:#ffe4e6;padding:6px;border-radius:10px;border:2px solid #000">✂️ Gunting Real<br>Rambut Jatuh!</div><div style="background:#e0f2fe;padding:6px;border-radius:10px;border:2px solid #000">🎨 Cat Warna<br>Pelangi!</div></div>
+<button class="btn btn-yellow" id="playBtn">💖 BUKA SALON SEKARANG!</button></div></div>
+
 <script>
 let canvas=document.getElementById('c'),ctx=canvas.getContext('2d');
 function resize(){canvas.width=innerWidth*2;canvas.height=innerHeight*2;canvas.style.width=innerWidth+'px';canvas.style.height=innerHeight+'px';}
 resize();addEventListener('resize',resize);
 
-let keys={left:false,right:false,run:false,jump:false};
-let player,level,camera={x:0,y:0},particles=[],game={score:0,coins:0,lives:3,time:400,playing:false};
-let TILE=32;
-
-let rawMap=[
-"                                                                                              ",
-"                                                                                              ",
-"                                                                                              ",
-"                                                                                              ",
-"                                                          c c                              ",
-"                                                         ======                              ",
-"                                                                                              ",
-"                                ccc                                                          ",
-"                               ======                                                        ",
-"                                                                                              ",
-"           c    c         b    e         c   b    ccc      b      c                          ",
-"          ==   ==        ==   ===       ==  ==   ====     ==     ==                          ",
-"                                                                                              ",
-"  c c                   ccc                                                                  c",
-" =====  b   e   ccc   =====   b   e    ===  ===    b  e   ===  ===  p  ===  ===  ===  =",
-"==============================================================================================",
+let tool='scissor',mouse={x:0,y:0,down:false},hairs=[],falling=[],glitters=[];
+let game={money:0,stars:0,cust:1,time:60,playing:false};
+let customers=[
+{face:'👧',name:'Siti',want:'Bob Pendek Rapi!',target:'bob',color:'#000'},
+{face:'👩',name:'Maya',want:'Poni Depan + Pink!',target:'bangs',color:'#ff69b4'},
+{face:'👧🏻',name:'Luna',want:'Panjang Blonde Cantik!',target:'long',color:'#ffcc00'},
+{face:'🧑‍🦰',name:'Rara',want:'Keriting Biru Ombre!',target:'curly',color:'#3b82f6'},
+{face:'👩‍🦳',name:'Cici',want:'Glitter Princess!',target:'glitter',color:'#a855f7'},
 ];
-let enemiesData=[{x:400,y:300,type:'crab'},{x:700,y:300,type:'crab'},{x:900,y:300,type:'bee'},{x:1300,y:300,type:'crab'},{x:1800,y:300,type:'bee'}];
+let current=0;
 
-function buildLevel(){
-level={map:rawMap.map(r=>r.split('')),w:rawMap[0].length,h:rawMap.length,bg:'#5c94fc',enemies:[]};
-enemiesData.forEach(e=>level.enemies.push({x:e.x,y:300,type:e.type,vx:-1,alive:true,vy:0}));
+function makeHair(){
+hairs=[];falling=[];glitters=[];
+let cx=canvas.width/2,cy=canvas.height/2-60;
+let cust=customers[current];
+// base head
+let head={x:cx,y:cy,r:110};
+// messy hair
+for(let i=0;i<180;i++){
+let angle=(i/180)*Math.PI - Math.PI*0.85;
+let spread=Math.PI*1.7;
+let a= -spread/2 + (i/180)*spread;
+let r=head.r+2;
+let len=50+Math.random()*90+ (i<20||i>160?40:0);
+let x=head.x+Math.cos(a)*r;
+let y=head.y+Math.sin(a)*r*0.9;
+hairs.push({x:x,y:y,ox:x,oy:y,len:len,angle:a+Math.PI/2+ (Math.random()-0.5)*0.6,cut:0,color:cust.color,origLen:len,thick:2+Math.random()*2.5});
 }
-function resetPlayer(){
-player={x:80,y:250,w:26,h:32,vx:0,vy:0,onGround:false,big:false,inv:0,dead:false,win:false};
-camera={x:0,y:0};game.time=400;
 }
-buildLevel();resetPlayer();
-
-function overlap(a,x,y,w,h){return a.x<x+w&&a.x+a.w>x&&a.y<y+h&&a.y+a.h>y;}
-
-function update(){
-if(!game.playing||player.dead||player.win)return;
-game.time-=0.02;if(game.time<=0){die();return;}
-let speed=keys.run?3.5:2.2;
-if(keys.left)player.vx=-speed;else if(keys.right)player.vx=speed;else player.vx*=0.8;
-if(Math.abs(player.vx)<0.1)player.vx=0;
-player.vy+=0.6;
-if(keys.jump&&player.onGround){player.vy=-12-(keys.run?2:0);player.onGround=false;}
-player.x+=player.vx;checkX();player.y+=player.vy;player.onGround=false;checkY();
-camera.x=player.x-canvas.width/3;if(camera.x<0)camera.x=0;if(camera.x>level.w*TILE-canvas.width)camera.x=level.w*TILE-canvas.width;
-let tx=Math.floor((player.x+player.w/2)/TILE),ty=Math.floor((player.y+player.h/2)/TILE);
-for(let y=Math.max(0,ty-2);y<Math.min(level.h-1,ty+2);y++)for(let x=Math.max(0,tx-2);x<Math.min(level.w-1,tx+2);x++){
-let ch=level.map[y][x];
-if(ch==='c'&&overlap(player,x*TILE,y*TILE,TILE,TILE)){level.map[y][x]=' ';game.coins++;game.score+=100;particles.push({x:x*TILE,y:y*TILE,t:'+100',life:60});if(game.coins>=100){game.coins=0;game.lives++;}}
-if(ch==='b'&&overlap(player,x*TILE,y*TILE,TILE,TILE)){level.map[y][x]=' ';player.big=true;game.score+=500;particles.push({x:x*TILE,y:y*TILE,t:'POWER!',life:60});}
-}
-level.enemies.forEach(en=>{if(!en.alive)return;en.x+=en.vx;en.vy+=0.5;en.y+=en.vy;let ex=Math.floor(en.x/TILE),ey=Math.floor((en.y+24)/TILE);if(level.map[ey]&&level.map[ey][ex]==='='){en.y=ey*TILE-24;en.vy=0;}if(overlap(player,en.x,en.y,28,24)){if(player.vy>0&&player.y+player.h<en.y+18){en.alive=false;player.vy=-8;game.score+=200;particles.push({x:en.x,y:en.y,t:'200',life:60});}else{if(player.big&&player.inv<=0){player.big=false;player.inv=120;}else if(player.inv<=0){die();}}}});
-if(player.inv>0)player.inv--;
-if(player.y>level.h*TILE+100)die();
-if(player.x>level.w*TILE-80)win();
-document.getElementById('score').textContent=game.score;document.getElementById('coins').textContent=game.coins;document.getElementById('lives').textContent=game.lives;document.getElementById('time').textContent=Math.floor(game.time);
-}
-function checkX(){let l=Math.floor(player.x/TILE),r=Math.floor((player.x+player.w)/TILE),t=Math.floor(player.y/TILE),b=Math.floor((player.y+player.h-1)/TILE);for(let y=t;y<=b;y++)for(let x=l;x<=r;x++)if(level.map[y]&&('=ep'.includes(level.map[y][x]))){if(player.vx>0)player.x=x*TILE-player.w-0.1;else if(player.vx<0)player.x=(x+1)*TILE+0.1;player.vx=0;}}
-function checkY(){let l=Math.floor(player.x/TILE),r=Math.floor((player.x+player.w)/TILE),t=Math.floor(player.y/TILE),b=Math.floor((player.y+player.h)/TILE);for(let y=t;y<=b;y++)for(let x=l;x<=r;x++)if(level.map[y]&&('=ep'.includes(level.map[y][x]))){if(player.vy>0){player.y=y*TILE-player.h;player.vy=0;player.onGround=true;}else if(player.vy<0){player.y=(y+1)*TILE;player.vy=0;}}}
 
 function draw(){
-ctx.fillStyle=level.bg;ctx.fillRect(0,0,canvas.width,canvas.height);
-for(let y=0;y<level.h;y++)for(let x=0;x<level.w;x++){let ch=level.map[y][x];let px=x*TILE-camera.x,py=y*TILE-camera.y;if(px<-40||px>canvas.width+40)continue;if(ch==='='){ctx.fillStyle='#00a800';ctx.fillRect(px,py,TILE,TILE);ctx.fillStyle='#00d000';ctx.fillRect(px,py,TILE,8);ctx.strokeStyle='#000';ctx.lineWidth=2;ctx.strokeRect(px,py,TILE,TILE);}else if(ch==='e'){ctx.fillStyle='#e58a00';ctx.fillRect(px,py,TILE,TILE);ctx.strokeRect(px,py,TILE,TILE);}else if(ch==='p'){ctx.fillStyle='#00a800';ctx.fillRect(px,py,TILE,TILE*2);ctx.fillRect(px-4,py,TILE+8,10);}else if(ch==='c'){let bob=Math.sin(Date.now()*0.005+x)*4;ctx.font='24px Arial';ctx.textAlign='center';ctx.fillText('🥥',px+TILE/2,py+TILE/2+8+bob);}else if(ch==='b'){let bob=Math.sin(Date.now()*0.004+x)*3;ctx.font='24px Arial';ctx.textAlign='center';ctx.fillText('🍌',px+TILE/2,py+TILE/2+8+bob);}}
-level.enemies.forEach(en=>{if(!en.alive)return;let px=en.x-camera.x,py=en.y-camera.y;if(px<-50||px>canvas.width+50)return;ctx.font='28px Arial';ctx.fillText(en.type==='crab'?'🦀':'🐝',px,py+22);});
-let px=player.x-camera.x,py=player.y-camera.y;
-if(player.inv%10<5){let e=player.big?'🦧':'🐒';if(!player.onGround)e='🙈';ctx.font=(player.big?36:28)+'px Arial';ctx.textAlign='center';ctx.fillText(e,px+player.w/2,py+player.h-2);}
-particles.forEach((p,i)=>{ctx.fillStyle='rgba(0,0,0,'+(p.life/60)+')';ctx.font='bold 14px Arial';ctx.fillText(p.t,p.x-camera.x,p.y-camera.y);p.y-=1;p.life--;if(p.life<=0)particles.splice(i,1);});
-let flagX=level.w*TILE-60-camera.x;ctx.font='30px Arial';ctx.fillText('🚩🏁',flagX,level.h*TILE-40-camera.y);
+ctx.clearRect(0,0,canvas.width,canvas.height);
+// salon bg
+let grad=ctx.createLinearGradient(0,0,0,canvas.height);grad.addColorStop(0,'#fff0f7');grad.addColorStop(1,'#e9d5ff');ctx.fillStyle=grad;ctx.fillRect(0,0,canvas.width,canvas.height);
+// chair
+ctx.fillStyle='#fbbf24';ctx.strokeStyle='#000';ctx.lineWidth=6;
+ctx.fillRect(canvas.width/2-180,canvas.height/2+140,360,20);ctx.strokeRect(canvas.width/2-180,canvas.height/2+140,360,20);
+// head
+let cx=canvas.width/2,cy=canvas.height/2-60;
+ctx.fillStyle='#ffdbac';ctx.beginPath();ctx.ellipse(cx,cy,110,125,0,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#000';ctx.lineWidth=5;ctx.stroke();
+// face
+ctx.font='80px Arial';ctx.textAlign='center';ctx.fillText(customers[current].face,cx,cy+20);
+// eyes
+ctx.fillStyle='#000';ctx.beginPath();ctx.ellipse(cx-30,cy-10,8,12,0,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.ellipse(cx+30,cy-10,8,12,0,0,Math.PI*2);ctx.fill();
+ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(cx-27,cy-14,3,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(cx+33,cy-14,3,0,Math.PI*2);ctx.fill();
+// smile
+ctx.strokeStyle='#000';ctx.lineWidth=3;ctx.beginPath();ctx.arc(cx,cy+25,20,0.2,Math.PI-0.2);ctx.stroke();
+
+// hairs
+hairs.forEach(h=>{
+if(h.cut>=h.len*0.85) return;
+let remaining=h.len-h.cut;
+let ex=h.x+Math.cos(h.angle)*remaining;
+let ey=h.y+Math.sin(h.angle)*remaining;
+ctx.strokeStyle=h.color;ctx.lineWidth=h.thick;ctx.lineCap='round';
+ctx.beginPath();ctx.moveTo(h.x,h.y);ctx.quadraticCurveTo(h.x+Math.cos(h.angle)*remaining*0.5+Math.sin(h.angle)*10, h.y+Math.sin(h.angle)*remaining*0.5, ex,ey);ctx.stroke();
+// highlight
+ctx.strokeStyle='rgba(255,255,255,0.3)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(h.x,h.y);ctx.lineTo(ex,ey);ctx.stroke();
+});
+
+// falling hairs
+falling.forEach((f,i)=>{
+f.y+=f.vy;f.x+=f.vx;f.vy+=0.3;f.vx*=0.98;f.life--;
+ctx.strokeStyle=f.color;ctx.lineWidth=f.thick;ctx.globalAlpha=f.life/60;ctx.beginPath();ctx.moveTo(f.x,f.y);ctx.lineTo(f.x+Math.cos(f.angle)*f.len*0.5,f.y+Math.sin(f.angle)*f.len*0.5);ctx.stroke();ctx.globalAlpha=1;
+if(f.life<=0)falling.splice(i,1);
+});
+
+// glitters
+glitters.forEach((g,i)=>{g.y-=0.5;g.life--;ctx.globalAlpha=g.life/40;ctx.font='18px Arial';ctx.fillText('✨',g.x,g.y);ctx.globalAlpha=1;if(g.life<=0)glitters.splice(i,1);});
+
+// tool cursor
+if(mouse.down){
+ctx.font='40px Arial';let icon={scissor:'✂️',razor:'🪒',comb:'🪮',dryer:'💨',pink:'🎨',blue:'💙',blonde:'👱',spray:'✨'}[tool]||'✂️';
+ctx.fillText(icon,mouse.x-20,mouse.y-20);
+if(tool==='scissor'){ctx.strokeStyle='#ff0000';ctx.lineWidth=2;ctx.setLineDash([6,6]);ctx.beginPath();ctx.arc(mouse.x,mouse.y,30,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);}
+}
 }
 
-function loop(){update();draw();requestAnimationFrame(loop);}loop();
-function die(){player.dead=true;game.lives--;setTimeout(()=>{if(game.lives<=0){game.playing=false;document.getElementById('menu').style.display='flex';document.getElementById('menu').innerHTML=`<div class="card"><div style="font-size:50px">💀</div><h1>GAME OVER!</h1><p>Score ${game.score}</p><button class="b b-yellow" onclick="location.reload()">🔁 MAIN LAGI</button></div>`;}else{resetPlayer();buildLevel();}},600);}
-function win(){player.win=true;game.score+=Math.floor(game.time)*2+1000;game.playing=false;document.getElementById('menu').style.display='flex';document.getElementById('menu').innerHTML=`<div class="card"><div style="font-size:50px">🏆</div><h1>MENANG!</h1><p>Score ${game.score}</p><button class="b b-yellow" onclick="share()">📲 SHARE</button><button class="b" onclick="location.reload()">🔁 LAGI</button></div>`;}
+function cutAt(x,y){
+let hit=false;
+hairs.forEach(h=>{
+if(h.cut>=h.len*0.9)return;
+let ex=h.x+Math.cos(h.angle)*(h.len-h.cut);
+let ey=h.y+Math.sin(h.angle)*(h.len-h.cut);
+let dist=Math.hypot(x-ex,y-ey);
+if(dist<40){
+if(tool==='scissor'){
+let cutAmount=8+Math.random()*12;
+h.cut+=cutAmount;
+if(h.cut<h.len){
+falling.push({x:ex,y:ey,angle:h.angle,len:cutAmount,color:h.color,thick:h.thick,vx:(Math.random()-0.5)*6,vy:Math.random()*2+1,life:60});
+}
+hit=true;
+}else if(tool==='razor'){
+h.cut=h.len*0.95;
+falling.push({x:ex,y:ey,angle:h.angle,len:h.len*0.5,color:h.color,thick:h.thick,vx:(Math.random()-0.5)*8,vy:2,life:60});
+hit=true;
+}else if(tool==='comb'){
+h.angle+=(x-h.x)*0.001;
+}
+else if(['pink','blue','blonde'].includes(tool)){
+let col={pink:'#ff69b4',blue:'#3b82f6',blonde:'#ffcc00'}[tool];
+h.color=col;hit=true;glitters.push({x:ex,y:ey,life:40});
+}
+else if(tool==='spray'){
+glitters.push({x:ex+ (Math.random()-0.5)*20,y:ey,life:50});h.color='#e879f9';hit=true;
+}
+}
+});
+if(hit&&tool==='scissor'){if(navigator.vibrate)navigator.vibrate(20);}
+}
 
-function startGame(){buildLevel();resetPlayer();game.playing=true;document.getElementById('menu').style.display='none';}
-document.getElementById('playBtn').addEventListener('click',startGame);
-document.getElementById('playBtn').addEventListener('touchstart',function(e){e.preventDefault();startGame();},{passive:false});
-window.share=function(){let t=`🐒 AKU MENANG MONYET BROS! Score ${game.score}! 👉 https://amedenai.github.io/monyet-kelapa-3d/`;window.open(`https://wa.me/?text=${encodeURIComponent(t)}`,'_blank')};
+function checkDone(){
+let total=hairs.length;
+let cutDone=hairs.filter(h=>h.cut>20).length;
+let colored=hairs.filter(h=>h.color!==customers[current].color).length;
+let progress=(cutDone/total*70)+(colored/total*30);
+let want=customers[current].target;
+let score=0;
+if(want==='bob'){score=hairs.filter(h=>h.len-h.cut<60&&h.len-h.cut>25).length/total*100;}
+else if(want==='bangs'){let front=hairs.filter(h=>Math.abs(h.angle-Math.PI/2)<0.5);score=front.filter(h=>h.len-h.cut<50).length/front.length*100;}
+else if(want==='long'){score=hairs.filter(h=>h.len-h.cut>70).length/total*100;}
+else if(want==='curly'){score=progress;}
+else if(want==='glitter'){score=glitters.length>0?80:progress;}
 
-function bind(id,key){let el=document.getElementById(id);let on=e=>{e.preventDefault();keys[key]=true;};let off=e=>{e.preventDefault();keys[key]=false;};el.addEventListener('touchstart',on,{passive:false});el.addEventListener('touchend',off,{passive:false});el.addEventListener('mousedown',on);el.addEventListener('mouseup',off);el.addEventListener('mouseleave',off);}
-bind('left','left');bind('right','right');bind('run','run');bind('jump','jump');
-addEventListener('keydown',e=>{if(e.code==='ArrowLeft')keys.left=true;if(e.code==='ArrowRight')keys.right=true;if(e.code==='Space'||e.code==='ArrowUp')keys.jump=true;if(e.code==='ShiftLeft')keys.run=true;});
-addEventListener('keyup',e=>{if(e.code==='ArrowLeft')keys.left=false;if(e.code==='ArrowRight')keys.right=false;if(e.code==='Space'||e.code==='ArrowUp')keys.jump=false;if(e.code==='ShiftLeft')keys.run=false;});
+return Math.min(100,score+progress*0.3);
+}
+
+function loop(){draw();if(game.playing){game.time-=0.016;document.getElementById('timer').textContent='⏱️ '+Math.floor(game.time)+'s';if(game.time<=0){nextCustomer(false);}else{let done=checkDone();if(done>75){document.getElementById('custWant').textContent='⭐ Wah cantik! Selesai? Tap DONE!';}}}requestAnimationFrame(loop);}
+loop();
+
+function nextCustomer(success){
+if(success){let stars=Math.floor(checkDone()/20)+1;game.money+=stars*50000;game.stars+=stars;document.getElementById('money').textContent=game.money.toLocaleString('id-ID');document.getElementById('stars').textContent=game.stars;}
+current++;if(current>=customers.length){game.playing=false;document.getElementById('menu').style.display='flex';document.getElementById('menu').innerHTML=`<div class="card"><div style="font-size:50px">👑💖</div><h1>SALON TUTUP!</h1><p>Hari ini dapat Rp ${game.money.toLocaleString('id-ID')} & ${game.stars} bintang! Kamu penata rambut terbaik!</p><button class="btn btn-yellow" onclick="share()">📲 SHARE HASIL!</button><button class="btn" onclick="location.reload()">🔁 BUKA LAGI BESOK</button></div>`;return;}
+document.getElementById('cust').textContent=(current+1)+'/5';document.getElementById('custFace').textContent=customers[current].face;document.getElementById('custName').textContent=customers[current].name+' - '+customers[current].want;document.getElementById('custWant').textContent='Mau: '+customers[current].want;game.time=60;makeHair();
+}
+
+function startSalon(){makeHair();game.playing=true;document.getElementById('menu').style.display='none';document.getElementById('cust').textContent='1/5';}
+document.getElementById('playBtn').addEventListener('click',startSalon);
+document.getElementById('playBtn').addEventListener('touchstart',e=>{e.preventDefault();startSalon();},{passive:false});
+
+canvas.addEventListener('pointerdown',e=>{mouse.down=true;let r=canvas.getBoundingClientRect();mouse.x=(e.clientX-r.left)*2;mouse.y=(e.clientY-r.top)*2;cutAt(mouse.x,mouse.y);});
+canvas.addEventListener('pointermove',e=>{let r=canvas.getBoundingClientRect();mouse.x=(e.clientX-r.left)*2;mouse.y=(e.clientY-r.top)*2;if(mouse.down)cutAt(mouse.x,mouse.y);});
+canvas.addEventListener('pointerup',()=>mouse.down=false);
+canvas.addEventListener('pointerleave',()=>mouse.down=false);
+
+document.querySelectorAll('.tool').forEach(t=>{t.addEventListener('click',()=>{document.querySelectorAll('.tool').forEach(x=>x.classList.remove('active'));t.classList.add('active');tool=t.dataset.tool;});});
+
+window.share=function(){let txt=`💇‍♀️ Aku jadi penata rambut di GIRLS HAIR SALON! Dapat Rp ${game.money.toLocaleString('id-ID')} hari ini! Rambut pelanggan jadi cantik banget! Kamu coba? 👉 https://amedenai.github.io/monyet-kelapa-3d/ #HairSalon #GameCewek`;window.open(`https://wa.me/?text=${encodeURIComponent(txt)}`,'_blank');};
+
+// double tap = selesai
+let lastTap=0;canvas.addEventListener('touchend',e=>{let now=Date.now();if(now-lastTap<400){let done=checkDone();if(done>50)nextCustomer(true);else{alert('Belum rapi! Potong lagi sampai '+Math.floor(done)+'% → butuh 75%!');}}lastTap=now;});
+
 </script>
 </body>
 </html>
