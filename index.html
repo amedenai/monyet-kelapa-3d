@@ -3,202 +3,216 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>💇‍♀️ GIRLS HAIR SALON - Cukur Rambut Cantik!</title>
+<title>🛵 OJEK VIRAL - Kejar Setoran!</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;user-select:none;-webkit-tap-highlight-color:transparent}
-body{background:linear-gradient(135deg,#ff9ad5 0%,#ffd6ec 50%,#c084fc 100%);overflow:hidden;font-family:system-ui;font-weight:800;touch-action:none}
-#c{display:block;width:100vw;height:100vh;cursor:crosshair}
-#hud{position:fixed;top:0;left:0;right:0;padding:10px;display:flex;justify-content:space-between;z-index:20;pointer-events:none}
-.badge{background:#fff;border:3px solid #000;border-radius:100px;padding:8px 14px;box-shadow:4px 4px 0 #000;font-size:12px}
-#tools{position:fixed;bottom:10px;left:10px;right:10px;display:flex;gap:8px;z-index:20;overflow-x:auto;padding:4px}
-.tool{flex:0 0 72px;height:72px;border-radius:20px;background:#fff;border:3px solid #000;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:24px;box-shadow:0 5px 0 #000;transition:0.15s}
-.tool:active,.tool.active{transform:translateY(4px) scale(0.95);box-shadow:0 1px 0 #000;background:#ffcc00}
-.tool span{font-size:9px;margin-top:2px}
-#menu{position:fixed;inset:0;z-index:100;background:linear-gradient(135deg,#ff9ad5,#c084fc);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;text-align:center}
-.card{background:#fff;border:4px solid #000;border-radius:24px;padding:18px;max-width:360px;width:100%;box-shadow:8px 8px 0 #000}
-.btn{width:100%;padding:14px;border-radius:100px;border:3px solid #000;background:#ff1493;color:#fff;font-weight:900;font-size:16px;box-shadow:0 5px 0 #000;margin-top:8px}
-.btn:active{transform:translateY(4px);box-shadow:0 1px 0 #000}
+body{background:#222;overflow:hidden;font-family:Arial Black,system-ui;font-weight:900;touch-action:none}
+#c{display:block;width:100vw;height:100vh}
+#hud{position:fixed;top:0;left:0;right:0;padding:8px;display:flex;justify-content:space-between;z-index:10;pointer-events:none}
+.badge{background:#fff;border:3px solid #000;border-radius:12px;padding:6px 10px;font-size:11px;box-shadow:4px 4px 0 #000}
+#fuelWrap{position:fixed;top:48px;left:10px;right:10px;height:14px;background:#000;border-radius:20px;padding:3px;z-index:10;border:2px solid #fff}
+#fuel{height:100%;width:100%;border-radius:20px;background:linear-gradient(90deg,#00ff00,#ffff00,#ff0000);transition:width 0.2s}
+#controls{position:fixed;bottom:10px;left:0;right:0;display:flex;justify-content:space-between;padding:0 10px;z-index:10}
+.ctrl{width:64px;height:64px;border-radius:16px;background:#fff;border:3px solid #000;display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 5px 0 #000}
+.ctrl:active{transform:translateY(4px);box-shadow:0 1px 0 #000}
+#gas{width:110px;height:64px;border-radius:30px;background:#00ff88;font-size:12px;text-align:center;line-height:1.1}
+#menu{position:fixed;inset:0;z-index:100;background:linear-gradient(135deg,#ffcc00 0%,#ff8800 50%,#000 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;text-align:center}
+.card{background:#fff;border:4px solid #000;border-radius:20px;padding:16px;max-width:360px;width:100%;box-shadow:8px 8px 0 #000}
+.btn{width:100%;padding:14px;border-radius:100px;border:3px solid #000;background:#000;color:#fff;font-weight:900;font-size:16px;box-shadow:0 5px 0 #444;margin-top:8px}
 .btn-yellow{background:#ffcc00;color:#000}
-#customerBar{position:fixed;top:60px;left:50%;transform:translateX(-50%);background:#000;color:#fff;padding:8px 18px;border-radius:100px;font-size:11px;z-index:20;display:flex;gap:10px;align-items:center}
-.hair{position:absolute;width:3px;background:linear-gradient(#000,#654321);border-radius:2px;transform-origin:top center}
+#order{position:fixed;top:70px;left:50%;transform:translateX(-50%);background:#000;color:#fff;padding:8px 14px;border-radius:100px;font-size:11px;z-index:10;display:none;align-items:center;gap:8px;border:2px solid #ffcc00}
 </style>
 </head>
 <body>
 <canvas id="c"></canvas>
-<div id="hud"><div class="badge">💰 Rp <span id="money">0</span></div><div class="badge">⭐ <span id="stars">0</span> / 20</div><div class="badge">👧 <span id="cust">1</span>/5</div></div>
-<div id="customerBar"><div id="custFace" style="font-size:20px">👧</div><div><div id="custName" style="font-weight:900">Siti - Rambut Kusut!</div><div id="custWant" style="font-size:10px;opacity:0.8">Mau: Bob Pendek Rapi!</div></div><div id="timer" style="background:#ffcc00;color:#000;padding:4px 8px;border-radius:20px;font-size:11px">⏱️ 60s</div></div>
-<div id="tools">
-<div class="tool active" data-tool="scissor">✂️<span>GUNTING</span></div>
-<div class="tool" data-tool="razor">🪒<span>CUKUR</span></div>
-<div class="tool" data-tool="comb">🪮<span>SISIR</span></div>
-<div class="tool" data-tool="dryer">💨<span>DRYER</span></div>
-<div class="tool" data-tool="pink">🎨<span>PINK</span></div>
-<div class="tool" data-tool="blue">💙<span>BIRU</span></div>
-<div class="tool" data-tool="blonde">👱<span>BLONDE</span></div>
-<div class="tool" data-tool="spray">✨<span>GLITTER</span></div>
-</div>
-<div id="menu"><div style="font-size:60px">💇‍♀️💖✂️</div><h1 style="font-size:30px;line-height:0.9;color:#fff;text-shadow:4px 4px 0 #000">GIRLS<br>HAIR SALON<br><span style="background:#000;color:#ffcc00;padding:2px 10px;border-radius:12px;font-size:18px">SATISFYING!</span></h1>
-<div class="card" style="margin-top:12px"><div style="font-size:12px;line-height:1.3">💖 Jadi penata rambut paling cantik! Gunting, warnai, bikin pelanggan happy! 100% satisfying kayak ASMR TikTok!</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:10px 0;font-size:10px"><div style="background:#ffe4e6;padding:6px;border-radius:10px;border:2px solid #000">✂️ Gunting Real<br>Rambut Jatuh!</div><div style="background:#e0f2fe;padding:6px;border-radius:10px;border:2px solid #000">🎨 Cat Warna<br>Pelangi!</div></div>
-<button class="btn btn-yellow" id="playBtn">💖 BUKA SALON SEKARANG!</button></div></div>
+<div id="hud"><div class="badge">💰 Rp <span id="money">0</span></div><div class="badge">⭐ <span id="rating">5.0</span></div><div class="badge">📦 <span id="done">0</span> order</div></div>
+<div id="fuelWrap"><div id="fuel"></div></div>
+<div id="order"><div id="orderIcon">🧑‍💼</div><div><div id="orderText" style="font-weight:900">Jemput Budi di Warung!</div><div id="orderDist" style="font-size:10px;opacity:0.8">Jarak: 120m</div></div></div>
+<div id="controls"><div style="display:flex;gap:8px"><div class="ctrl" id="left">◀️</div><div class="ctrl" id="right">▶️</div></div><div style="display:flex;gap:8px"><div class="ctrl" id="brake">🛑</div><div class="ctrl" id="gas">🛵<br>GAS!</div></div></div>
+<div id="menu"><div style="font-size:60px">🛵💨💰</div><h1 style="font-size:30px;line-height:0.9;color:#000;text-shadow:3px 3px 0 #fff">OJEK<br>VIRAL<br><span style="background:#000;color:#ffcc00;padding:2px 10px;border-radius:12px">KEJAR SETORAN!</span></h1>
+<div class="card" style="margin-top:10px"><div style="font-size:11px;line-height:1.3">🛵 Jadi driver ojek online! Jemput penumpang, hindari macet, kejar Rp 500rb sehari! Bensin habis = dorong motor!</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:8px 0;font-size:10px"><div style="background:#000;color:#fff;padding:6px;border-radius:10px">⛽ Bensin habis?<br>Isi di pom!</div><div style="background:#000;color:#fff;padding:6px;border-radius:10px">⭐ Tip gede kalau<br>ngebut & drift!</div></div>
+<button class="btn btn-yellow" id="playBtn">🛵 MULAI NGOJEK!</button><div style="font-size:9px;margin-top:6px">🔥 2.3 Juta driver main! Top 1: Rp 2.1jt/hari!</div></div></div>
 
 <script>
 let canvas=document.getElementById('c'),ctx=canvas.getContext('2d');
 function resize(){canvas.width=innerWidth*2;canvas.height=innerHeight*2;canvas.style.width=innerWidth+'px';canvas.style.height=innerHeight+'px';}
 resize();addEventListener('resize',resize);
 
-let tool='scissor',mouse={x:0,y:0,down:false},hairs=[],falling=[],glitters=[];
-let game={money:0,stars:0,cust:1,time:60,playing:false};
-let customers=[
-{face:'👧',name:'Siti',want:'Bob Pendek Rapi!',target:'bob',color:'#000'},
-{face:'👩',name:'Maya',want:'Poni Depan + Pink!',target:'bangs',color:'#ff69b4'},
-{face:'👧🏻',name:'Luna',want:'Panjang Blonde Cantik!',target:'long',color:'#ffcc00'},
-{face:'🧑‍🦰',name:'Rara',want:'Keriting Biru Ombre!',target:'curly',color:'#3b82f6'},
-{face:'👩‍🦳',name:'Cici',want:'Glitter Princess!',target:'glitter',color:'#a855f7'},
-];
-let current=0;
+let keys={left:false,right:false,gas:false,brake:false};
+let player,roads=[],cars=[],buildings=[],orders=[],currentOrder=null;
+let game={money:0,rating:5.0,done:0,fuel:100,playing:false,time:0,passenger:false};
 
-function makeHair(){
-hairs=[];falling=[];glitters=[];
-let cx=canvas.width/2,cy=canvas.height/2-60;
-let cust=customers[current];
-// base head
-let head={x:cx,y:cy,r:110};
-// messy hair
-for(let i=0;i<180;i++){
-let angle=(i/180)*Math.PI - Math.PI*0.85;
-let spread=Math.PI*1.7;
-let a= -spread/2 + (i/180)*spread;
-let r=head.r+2;
-let len=50+Math.random()*90+ (i<20||i>160?40:0);
-let x=head.x+Math.cos(a)*r;
-let y=head.y+Math.sin(a)*r*0.9;
-hairs.push({x:x,y:y,ox:x,oy:y,len:len,angle:a+Math.PI/2+ (Math.random()-0.5)*0.6,cut:0,color:cust.color,origLen:len,thick:2+Math.random()*2.5});
+let ROAD_W=300;
+function buildCity(){
+roads=[];buildings=[];cars=[];orders=[];
+for(let i=0;i<20;i++){
+let y=i*400;
+roads.push({y:y,w:canvas.width,lanes:3});
+// buildings kiri kanan
+for(let j=0;j<12;j++){
+buildings.push({x:Math.random()*200-100,y:y+Math.random()*350,w:60+Math.random()*80,h:80+Math.random()*120,color:`hsl(${Math.random()*20+30},60%,${40+Math.random()*20}%)`});
+buildings.push({x:canvas.width-200+Math.random()*100,y:y+Math.random()*350,w:60+Math.random()*80,h:80+Math.random()*120,color:`hsl(${Math.random()*20+200},50%,${40+Math.random()*20}%)`});
+}
+// cars
+for(let k=0;k<4;k++){
+cars.push({x:100+Math.random()*(canvas.width-200),y:y+Math.random()*300,v:1+Math.random()*1.5,lane:Math.floor(Math.random()*3),w:40,h:70,color:`hsl(${Math.random()*360},70%,50%)`});
+}
+// orders
+if(i>1&&i%2===0){
+orders.push({x:80+Math.random()*(canvas.width-160),y:y+100,type:'pickup',name:['Budi','Siti','Ahmad','Rina','Joko'][Math.floor(Math.random()*5)],icon:['🧑‍💼','👩‍🎓','👨‍🍳','👩‍💼','🧔'][Math.floor(Math.random()*5)],taken:false});
 }
 }
+}
+
+function resetPlayer(){
+player={x:canvas.width/2,y:300,w:26,h:46,vx:0,vy:0,speed:0,maxSpeed:7,angle:0};
+game.fuel=100;game.passenger=false;currentOrder=null;
+}
+
+function newOrder(){
+if(orders.length===0)return;
+let avail=orders.filter(o=>!o.taken);
+if(avail.length===0){buildCity();avail=orders.filter(o=>!o.taken);}
+let o=avail[Math.floor(Math.random()*avail.length)];
+o.taken=true;currentOrder=o;
+document.getElementById('order').style.display='flex';
+document.getElementById('orderIcon').textContent=o.icon;
+document.getElementById('orderText').textContent=`Jemput ${o.name} di ${o.y>1000?'Ujung':'Warung'}!`;
+}
+
+buildCity();resetPlayer();
+
+function update(){
+if(!game.playing)return;
+game.time+=0.016;
+if(keys.gas&&game.fuel>0){player.speed=Math.min(player.maxSpeed,player.speed+0.18);game.fuel-=0.06;}else{player.speed=Math.max(0,player.speed-0.12);}
+if(keys.brake){player.speed=Math.max(0,player.speed-0.25);}
+if(keys.left)player.angle-=0.06*(player.speed/max(1,player.maxSpeed/2));if(keys.right)player.angle+=0.06*(player.speed/max(1,player.maxSpeed/2));
+player.vx=Math.sin(player.angle)*player.speed;
+player.vy=-Math.cos(player.angle)*player.speed;
+player.x+=player.vx;
+player.y+=player.vy;
+
+// bounds
+if(player.x<60)player.x=60;if(player.x>canvas.width-60)player.x=canvas.width-60;
+
+// cars move
+cars.forEach(car=>{
+car.y-=car.v+player.speed*0.3;
+if(car.y<-100){car.y=player.y+800+Math.random()*400;car.x=80+car.lane*100+Math.random()*40;}
+// collision
+let dx=player.x-car.x,dy=player.y-car.y;
+if(Math.abs(dx)<40&&Math.abs(dy)<50){
+player.speed*=0.3;
+player.vx+=(Math.random()-0.5)*6;
+game.rating=Math.max(1,game.rating-0.05);
+game.fuel-=1;
+}
+});
+
+// orders
+if(currentOrder){
+let dx=player.x-currentOrder.x,dy=player.y-currentOrder.y;
+let dist=Math.hypot(dx,dy);
+document.getElementById('orderDist').textContent=`Jarak: ${Math.floor(dist/10)}m • Bensin: ${Math.floor(game.fuel)}%`;
+if(dist<50){
+if(!game.passenger){
+// pickup
+game.passenger=true;
+orders=orders.filter(o=>o!==currentOrder);
+// create dropoff
+let drop={x:80+Math.random()*(canvas.width-160),y:player.y-600-Math.random()*600,type:'dropoff',icon:'🏠',name:currentOrder.name,taken:true};
+currentOrder=drop;
+document.getElementById('orderIcon').textContent='🏠';
+document.getElementById('orderText').textContent=`Antar ${drop.name} ke Rumah!`;
+game.fuel=Math.min(100,game.fuel+5);
+}else{
+// dropoff
+let tip=Math.floor(10000+player.speed*2000+Math.random()*5000);
+game.money+=tip;game.done++;game.rating=Math.min(5,game.rating+0.1);
+game.fuel=Math.min(100,game.fuel+15);
+currentOrder=null;game.passenger=false;
+document.getElementById('order').style.display='none';
+document.getElementById('money').textContent=game.money.toLocaleString('id-ID');
+document.getElementById('rating').textContent=game.rating.toFixed(1);
+document.getElementById('done').textContent=game.done;
+setTimeout(newOrder,800);
+if(game.done>=10){win();}
+}
+}
+}
+
+// fuel
+if(game.fuel<=0){player.maxSpeed=1.5;player.speed=Math.min(player.speed,1.5);if(Math.floor(game.time*2)%2===0)document.getElementById('fuel').style.background='#ff0000';}else{player.maxSpeed=7;document.getElementById('fuel').style.background='linear-gradient(90deg,#00ff00,#ffff00,#ff0000)';}
+document.getElementById('fuel').style.width=game.fuel+'%';
+
+// camera follow
+}
+
+function max(a,b){return a>b?a:b}
 
 function draw(){
-ctx.clearRect(0,0,canvas.width,canvas.height);
-// salon bg
-let grad=ctx.createLinearGradient(0,0,0,canvas.height);grad.addColorStop(0,'#fff0f7');grad.addColorStop(1,'#e9d5ff');ctx.fillStyle=grad;ctx.fillRect(0,0,canvas.width,canvas.height);
-// chair
-ctx.fillStyle='#fbbf24';ctx.strokeStyle='#000';ctx.lineWidth=6;
-ctx.fillRect(canvas.width/2-180,canvas.height/2+140,360,20);ctx.strokeRect(canvas.width/2-180,canvas.height/2+140,360,20);
-// head
-let cx=canvas.width/2,cy=canvas.height/2-60;
-ctx.fillStyle='#ffdbac';ctx.beginPath();ctx.ellipse(cx,cy,110,125,0,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#000';ctx.lineWidth=5;ctx.stroke();
-// face
-ctx.font='80px Arial';ctx.textAlign='center';ctx.fillText(customers[current].face,cx,cy+20);
-// eyes
-ctx.fillStyle='#000';ctx.beginPath();ctx.ellipse(cx-30,cy-10,8,12,0,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.ellipse(cx+30,cy-10,8,12,0,0,Math.PI*2);ctx.fill();
-ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(cx-27,cy-14,3,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(cx+33,cy-14,3,0,Math.PI*2);ctx.fill();
-// smile
-ctx.strokeStyle='#000';ctx.lineWidth=3;ctx.beginPath();ctx.arc(cx,cy+25,20,0.2,Math.PI-0.2);ctx.stroke();
-
-// hairs
-hairs.forEach(h=>{
-if(h.cut>=h.len*0.85) return;
-let remaining=h.len-h.cut;
-let ex=h.x+Math.cos(h.angle)*remaining;
-let ey=h.y+Math.sin(h.angle)*remaining;
-ctx.strokeStyle=h.color;ctx.lineWidth=h.thick;ctx.lineCap='round';
-ctx.beginPath();ctx.moveTo(h.x,h.y);ctx.quadraticCurveTo(h.x+Math.cos(h.angle)*remaining*0.5+Math.sin(h.angle)*10, h.y+Math.sin(h.angle)*remaining*0.5, ex,ey);ctx.stroke();
-// highlight
-ctx.strokeStyle='rgba(255,255,255,0.3)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(h.x,h.y);ctx.lineTo(ex,ey);ctx.stroke();
+ctx.fillStyle='#333';ctx.fillRect(0,0,canvas.width,canvas.height);
+// roads
+for(let r=0;r<20;r++){
+let y=r*400 - (player.y%400);
+for(let yy=y-400;yy<canvas.height+400;yy+=400){
+ctx.fillStyle='#444';ctx.fillRect(0,yy,canvas.width,400);
+ctx.fillStyle='#666';ctx.fillRect(60,yy,canvas.width-120,400);
+ctx.fillStyle='#fff';for(let l=1;l<3;l++){for(let d=0;d<400;d+=40){ctx.fillRect(60+l* (canvas.width-120)/3 -2,yy+d,4,20);}}
+ctx.fillStyle='#ffcc00';ctx.fillRect(55,yy,4,400);ctx.fillRect(canvas.width-55,yy,4,400);
+}
+}
+// buildings
+buildings.forEach(b=>{
+let sy=b.y-player.y+canvas.height/2;
+if(sy>-200&&sy<canvas.height+200){ctx.fillStyle=b.color;ctx.fillRect(b.x,sy,b.w,b.h);ctx.strokeStyle='#000';ctx.lineWidth=3;ctx.strokeRect(b.x,sy,b.w,b.h);for(let wy=0;wy<b.h;wy+=20)for(let wx=0;wx<b.w;wx+=15){ctx.fillStyle=Math.random()>0.5?'#ffff99':'#000';ctx.fillRect(b.x+wx+3,sy+wy+5,8,10);}}
 });
-
-// falling hairs
-falling.forEach((f,i)=>{
-f.y+=f.vy;f.x+=f.vx;f.vy+=0.3;f.vx*=0.98;f.life--;
-ctx.strokeStyle=f.color;ctx.lineWidth=f.thick;ctx.globalAlpha=f.life/60;ctx.beginPath();ctx.moveTo(f.x,f.y);ctx.lineTo(f.x+Math.cos(f.angle)*f.len*0.5,f.y+Math.sin(f.angle)*f.len*0.5);ctx.stroke();ctx.globalAlpha=1;
-if(f.life<=0)falling.splice(i,1);
-});
-
-// glitters
-glitters.forEach((g,i)=>{g.y-=0.5;g.life--;ctx.globalAlpha=g.life/40;ctx.font='18px Arial';ctx.fillText('✨',g.x,g.y);ctx.globalAlpha=1;if(g.life<=0)glitters.splice(i,1);});
-
-// tool cursor
-if(mouse.down){
-ctx.font='40px Arial';let icon={scissor:'✂️',razor:'🪒',comb:'🪮',dryer:'💨',pink:'🎨',blue:'💙',blonde:'👱',spray:'✨'}[tool]||'✂️';
-ctx.fillText(icon,mouse.x-20,mouse.y-20);
-if(tool==='scissor'){ctx.strokeStyle='#ff0000';ctx.lineWidth=2;ctx.setLineDash([6,6]);ctx.beginPath();ctx.arc(mouse.x,mouse.y,30,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);}
-}
-}
-
-function cutAt(x,y){
-let hit=false;
-hairs.forEach(h=>{
-if(h.cut>=h.len*0.9)return;
-let ex=h.x+Math.cos(h.angle)*(h.len-h.cut);
-let ey=h.y+Math.sin(h.angle)*(h.len-h.cut);
-let dist=Math.hypot(x-ex,y-ey);
-if(dist<40){
-if(tool==='scissor'){
-let cutAmount=8+Math.random()*12;
-h.cut+=cutAmount;
-if(h.cut<h.len){
-falling.push({x:ex,y:ey,angle:h.angle,len:cutAmount,color:h.color,thick:h.thick,vx:(Math.random()-0.5)*6,vy:Math.random()*2+1,life:60});
-}
-hit=true;
-}else if(tool==='razor'){
-h.cut=h.len*0.95;
-falling.push({x:ex,y:ey,angle:h.angle,len:h.len*0.5,color:h.color,thick:h.thick,vx:(Math.random()-0.5)*8,vy:2,life:60});
-hit=true;
-}else if(tool==='comb'){
-h.angle+=(x-h.x)*0.001;
-}
-else if(['pink','blue','blonde'].includes(tool)){
-let col={pink:'#ff69b4',blue:'#3b82f6',blonde:'#ffcc00'}[tool];
-h.color=col;hit=true;glitters.push({x:ex,y:ey,life:40});
-}
-else if(tool==='spray'){
-glitters.push({x:ex+ (Math.random()-0.5)*20,y:ey,life:50});h.color='#e879f9';hit=true;
-}
+// orders
+orders.concat(currentOrder?[currentOrder]:[]).forEach(o=>{
+if(!o)return;
+let sy=o.y-player.y+canvas.height/2;
+if(sy>-100&&sy<canvas.height+100){
+let bob=Math.sin(Date.now()*0.005+o.x)*6;
+if(o.type==='pickup'){ctx.font='36px Arial';ctx.textAlign='center';ctx.fillText(o.icon,o.x,sy+bob);ctx.font='bold 12px Arial';ctx.fillStyle='#00ff00';ctx.fillText(o.name,o.x,sy+bob+16);ctx.beginPath();ctx.strokeStyle='#00ff00';ctx.lineWidth=3;ctx.setLineDash([8,6]);ctx.arc(o.x,sy+bob,30,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);}
+else{ctx.font='36px Arial';ctx.textAlign='center';ctx.fillText('🏠',o.x,sy+bob);ctx.font='bold 12px Arial';ctx.fillStyle='#ffcc00';ctx.fillText('ANTAR',o.x,sy+bob+16);ctx.beginPath();ctx.strokeStyle='#ffcc00';ctx.lineWidth=3;ctx.setLineDash([8,6]);ctx.arc(o.x,sy+bob,34,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);}
 }
 });
-if(hit&&tool==='scissor'){if(navigator.vibrate)navigator.vibrate(20);}
+// cars
+cars.forEach(car=>{
+let sy=car.y-player.y+canvas.height/2;
+if(sy>-100&&sy<canvas.height+100){ctx.fillStyle=car.color;ctx.fillRect(car.x-20,sy-35,40,70);ctx.fillStyle='#000';ctx.fillRect(car.x-20,sy-35,40,12);ctx.fillStyle='#87ceeb';ctx.fillRect(car.x-16,sy-28,32,14);ctx.fillStyle='#222';ctx.beginPath();ctx.arc(car.x-14,sy+30,6,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(car.x+14,sy+30,6,0,Math.PI*2);ctx.fill();}
+});
+// player
+let px=canvas.width/2,py=canvas.height/2;
+ctx.save();ctx.translate(px,py);ctx.rotate(player.angle);
+if(game.passenger){ctx.font='24px Arial';ctx.textAlign='center';ctx.fillText('🧑‍💼',0,-32);}
+ctx.font='40px Arial';ctx.textAlign='center';ctx.fillText('🛵',0,10);
+ctx.font='16px Arial';ctx.fillText(player.speed>5?'💨':'',0,-20);
+ctx.restore();
+// speed lines
+if(player.speed>4){ctx.strokeStyle='rgba(255,255,255,0.4)';ctx.lineWidth=2;for(let i=0;i<player.speed*3;i++){let x=Math.random()*canvas.width,y=Math.random()*canvas.height;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x,y+player.speed*6);ctx.stroke();}}
 }
 
-function checkDone(){
-let total=hairs.length;
-let cutDone=hairs.filter(h=>h.cut>20).length;
-let colored=hairs.filter(h=>h.color!==customers[current].color).length;
-let progress=(cutDone/total*70)+(colored/total*30);
-let want=customers[current].target;
-let score=0;
-if(want==='bob'){score=hairs.filter(h=>h.len-h.cut<60&&h.len-h.cut>25).length/total*100;}
-else if(want==='bangs'){let front=hairs.filter(h=>Math.abs(h.angle-Math.PI/2)<0.5);score=front.filter(h=>h.len-h.cut<50).length/front.length*100;}
-else if(want==='long'){score=hairs.filter(h=>h.len-h.cut>70).length/total*100;}
-else if(want==='curly'){score=progress;}
-else if(want==='glitter'){score=glitters.length>0?80:progress;}
+function loop(){update();draw();requestAnimationFrame(loop);}loop();
 
-return Math.min(100,score+progress*0.3);
+function win(){
+game.playing=false;document.getElementById('menu').style.display='flex';
+document.getElementById('menu').innerHTML=`<div class="card"><div style="font-size:50px">🏆💰🛵</div><h1>KEJAR SETORAN SELESAI!</h1><p>Hari ini: Rp ${game.money.toLocaleString('id-ID')} • ${game.done} order • Rating ${game.rating.toFixed(1)} ⭐</p><p style="font-size:11px;margin:8px 0">Kamu driver terbaik! Bos Gojek bangga!</p><button class="btn btn-yellow" onclick="share()">📲 PAMER KE TEMAN!</button><button class="btn" onclick="location.reload()">🔁 NGOJEK LAGI!</button></div>`;
 }
 
-function loop(){draw();if(game.playing){game.time-=0.016;document.getElementById('timer').textContent='⏱️ '+Math.floor(game.time)+'s';if(game.time<=0){nextCustomer(false);}else{let done=checkDone();if(done>75){document.getElementById('custWant').textContent='⭐ Wah cantik! Selesai? Tap DONE!';}}}requestAnimationFrame(loop);}
-loop();
-
-function nextCustomer(success){
-if(success){let stars=Math.floor(checkDone()/20)+1;game.money+=stars*50000;game.stars+=stars;document.getElementById('money').textContent=game.money.toLocaleString('id-ID');document.getElementById('stars').textContent=game.stars;}
-current++;if(current>=customers.length){game.playing=false;document.getElementById('menu').style.display='flex';document.getElementById('menu').innerHTML=`<div class="card"><div style="font-size:50px">👑💖</div><h1>SALON TUTUP!</h1><p>Hari ini dapat Rp ${game.money.toLocaleString('id-ID')} & ${game.stars} bintang! Kamu penata rambut terbaik!</p><button class="btn btn-yellow" onclick="share()">📲 SHARE HASIL!</button><button class="btn" onclick="location.reload()">🔁 BUKA LAGI BESOK</button></div>`;return;}
-document.getElementById('cust').textContent=(current+1)+'/5';document.getElementById('custFace').textContent=customers[current].face;document.getElementById('custName').textContent=customers[current].name+' - '+customers[current].want;document.getElementById('custWant').textContent='Mau: '+customers[current].want;game.time=60;makeHair();
+function startOjek(){
+resetPlayer();buildCity();game.money=0;game.done=0;game.rating=5.0;game.fuel=100;game.playing=true;document.getElementById('menu').style.display='none';setTimeout(newOrder,1000);
+document.getElementById('money').textContent='0';document.getElementById('rating').textContent='5.0';document.getElementById('done').textContent='0';
 }
+document.getElementById('playBtn').addEventListener('click',startOjek);
+document.getElementById('playBtn').addEventListener('touchstart',e=>{e.preventDefault();startOjek();},{passive:false});
+window.share=function(){let t=`🛵 AKU NGOJEK DAPAT Rp ${game.money.toLocaleString('id-ID')} hari ini! ${game.done} order, rating ${game.rating.toFixed(1)}⭐! Kamu berani saingin? 👉 https://amedenai.github.io/monyet-kelapa-3d/ #OjekViral #GameOjek`;window.open(`https://wa.me/?text=${encodeURIComponent(t)}`,'_blank');};
 
-function startSalon(){makeHair();game.playing=true;document.getElementById('menu').style.display='none';document.getElementById('cust').textContent='1/5';}
-document.getElementById('playBtn').addEventListener('click',startSalon);
-document.getElementById('playBtn').addEventListener('touchstart',e=>{e.preventDefault();startSalon();},{passive:false});
-
-canvas.addEventListener('pointerdown',e=>{mouse.down=true;let r=canvas.getBoundingClientRect();mouse.x=(e.clientX-r.left)*2;mouse.y=(e.clientY-r.top)*2;cutAt(mouse.x,mouse.y);});
-canvas.addEventListener('pointermove',e=>{let r=canvas.getBoundingClientRect();mouse.x=(e.clientX-r.left)*2;mouse.y=(e.clientY-r.top)*2;if(mouse.down)cutAt(mouse.x,mouse.y);});
-canvas.addEventListener('pointerup',()=>mouse.down=false);
-canvas.addEventListener('pointerleave',()=>mouse.down=false);
-
-document.querySelectorAll('.tool').forEach(t=>{t.addEventListener('click',()=>{document.querySelectorAll('.tool').forEach(x=>x.classList.remove('active'));t.classList.add('active');tool=t.dataset.tool;});});
-
-window.share=function(){let txt=`💇‍♀️ Aku jadi penata rambut di GIRLS HAIR SALON! Dapat Rp ${game.money.toLocaleString('id-ID')} hari ini! Rambut pelanggan jadi cantik banget! Kamu coba? 👉 https://amedenai.github.io/monyet-kelapa-3d/ #HairSalon #GameCewek`;window.open(`https://wa.me/?text=${encodeURIComponent(txt)}`,'_blank');};
-
-// double tap = selesai
-let lastTap=0;canvas.addEventListener('touchend',e=>{let now=Date.now();if(now-lastTap<400){let done=checkDone();if(done>50)nextCustomer(true);else{alert('Belum rapi! Potong lagi sampai '+Math.floor(done)+'% → butuh 75%!');}}lastTap=now;});
-
+function bind(id,key){let el=document.getElementById(id);let on=e=>{e.preventDefault();keys[key]=true;};let off=e=>{e.preventDefault();keys[key]=false;};el.addEventListener('touchstart',on,{passive:false});el.addEventListener('touchend',off,{passive:false});el.addEventListener('mousedown',on);el.addEventListener('mouseup',off);el.addEventListener('mouseleave',off);}
+bind('left','left');bind('right','right');bind('gas','gas');bind('brake','brake');
+addEventListener('keydown',e=>{if(e.code==='ArrowLeft')keys.left=true;if(e.code==='ArrowRight')keys.right=true;if(e.code==='ArrowUp'||e.code==='Space')keys.gas=true;if(e.code==='ArrowDown')keys.brake=true;});
+addEventListener('keyup',e=>{if(e.code==='ArrowLeft')keys.left=false;if(e.code==='ArrowRight')keys.right=false;if(e.code==='ArrowUp'||e.code==='Space')keys.gas=false;if(e.code==='ArrowDown')keys.brake=false;});
 </script>
 </body>
 </html>
