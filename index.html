@@ -3,75 +3,39 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>MONYET BROS 🐒🍄 - Super Coconut Adventure</title>
+<title>MONYET BROS FIX 🐒</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;user-select:none;-webkit-tap-highlight-color:transparent}
-body{background:#5c94fc;overflow:hidden;font-family:'Arial Black',monospace;touch-action:none}
-#c{display:block;width:100vw;height:100vh;image-rendering:pixelated}
-#hud{position:fixed;top:0;left:0;right:0;padding:8px;display:flex;justify-content:space-between;z-index:10;pointer-events:none;color:#fff;text-shadow:2px 2px 0 #000;font-size:14px}
+body{background:#5c94fc;overflow:hidden;font-family:Arial Black,monospace;touch-action:none}
+#c{display:block;width:100vw;height:100vh}
+#hud{position:fixed;top:0;left:0;right:0;padding:8px;display:flex;justify-content:space-between;z-index:10;color:#fff;text-shadow:2px 2px 0 #000;font-size:14px;font-weight:900}
 #controls{position:fixed;bottom:10px;left:10px;right:10px;display:flex;justify-content:space-between;z-index:10}
-.btn{width:70px;height:70px;border-radius:14px;background:rgba(255,255,255,0.85);border:3px solid #000;display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:0 6px 0 #000}
+.btn{width:68px;height:68px;border-radius:14px;background:#fff;border:3px solid #000;display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 6px 0 #000}
 .btn:active{transform:translateY(4px);box-shadow:0 2px 0 #000}
-#rightCtr{display:flex;gap:10px}
-#jump{width:90px;height:90px;border-radius:50%;background:#ff4444;color:#fff}
+#jump{width:88px;height:88px;border-radius:50%;background:#ff2222;color:#fff;font-weight:900}
 #menu{position:fixed;inset:0;z-index:100;background:linear-gradient(#5c94fc 0%,#00d000 80%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;text-align:center}
 .card{background:#fff;border:4px solid #000;border-radius:20px;padding:16px;max-width:360px;width:100%;box-shadow:8px 8px 0 #000}
 .b{width:100%;padding:14px;border-radius:12px;border:3px solid #000;background:#ff0000;color:#fff;font-weight:900;font-size:18px;margin-top:8px;box-shadow:0 5px 0 #000}
-.b:active{transform:translateY(4px);box-shadow:0 1px 0 #000}
 .b-yellow{background:#ffcc00;color:#000}
 </style>
 </head>
 <body>
 <canvas id="c"></canvas>
-<div id="hud">
-<div>🌍 <span id="world">1-1</span> ⏱️ <span id="time">400</span></div>
-<div>⭐ <span id="score">0</span> 🥥 <span id="coins">0</span> ❤️ <span id="lives">3</span></div>
-</div>
-<div id="controls">
-<div style="display:flex;gap:10px">
-<div class="btn" id="left">◀️</div>
-<div class="btn" id="right">▶️</div>
-</div>
-<div id="rightCtr">
-<div class="btn" id="run">💨</div>
-<div class="btn" id="jump">⤴️</div>
-</div>
-</div>
-
-<div id="menu">
-<div style="font-size:60px">🐒🍄🌴</div>
-<h1 style="font-size:28px;color:#fff;text-shadow:4px 4px 0 #000;line-height:0.9">SUPER<br>MONYET<br>BROS</h1>
-<div class="card" style="margin-top:10px">
-<div style="font-size:12px;font-weight:800;line-height:1.3">🍄 Selamat datang di Pulau Kelapa! Kiko si Monyet harus selamatkan pisang emas dari Raja Kepiting!</div>
-<div style="text-align:left;font-size:11px;margin:10px 0;background:#000;color:#fff;padding:8px;border-radius:10px">
-🟡 🥥 = KOIN (100 = ❤️)<br>
-🍌 PISANG = JAMUR SUPER<br>
-🦀 INJAK MUSUH = MATI<br>
-🚩 BENDERA = MENANG!<br>
-</div>
-<button class="b b-yellow" onclick="start()">▶️ MULAI PETUALANGAN!</button>
-<div style="font-size:10px;margin-top:6px">Kontrol: Geser kiri kanan + Loncat! Tahan RUN untuk lari cepat!</div>
-</div>
-</div>
-
+<div id="hud"><div>🌍 1-1 ⏱️ <span id="time">400</span></div><div>⭐ <span id="score">0</span> 🥥 <span id="coins">0</span> ❤️ <span id="lives">3</span></div></div>
+<div id="controls"><div style="display:flex;gap:10px"><div class="btn" id="left">◀️</div><div class="btn" id="right">▶️</div></div><div style="display:flex;gap:10px"><div class="btn" id="run">💨</div><div class="btn" id="jump">⤴️</div></div></div>
+<div id="menu"><div style="font-size:60px">🐒🍄</div><h1 style="font-size:28px;color:#fff;text-shadow:4px 4px 0 #000;line-height:0.9">SUPER<br>MONYET<br>BROS</h1>
+<div class="card" style="margin-top:10px"><div style="font-size:12px;font-weight:800">Kumpulin 🥥, makan 🍌 biar gede, injak 🦀🐝!</div><div style="text-align:left;font-size:11px;margin:8px 0;background:#000;color:#fff;padding:8px;border-radius:10px">◀️▶️ Lari | 💨 Lari cepat | ⤴️ Loncat<br>100 🥥 = ❤️ nyawa extra!</div>
+<button class="b b-yellow" id="playBtn">▶️ MULAI SEKARANG!</button></div></div>
 <script>
 let canvas=document.getElementById('c'),ctx=canvas.getContext('2d');
-function resize(){canvas.width=innerWidth*2;canvas.height=innerHeight*2;canvas.style.width=innerWidth+'px';canvas.style.height=innerHeight+'px';ctx.imageSmoothingEnabled=false;}
+function resize(){canvas.width=innerWidth*2;canvas.height=innerHeight*2;canvas.style.width=innerWidth+'px';canvas.style.height=innerHeight+'px';}
 resize();addEventListener('resize',resize);
 
-let audio=null;function audioInit(){audio=new(window.AudioContext||window.webkitAudioContext)()}
-function beep(f,d,t='square',v=0.3){if(!audio)return;let o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.setValueAtTime(v,audio.currentTime);g.gain.exponentialRampToValueAtTime(0.001,audio.currentTime+d);o.connect(g);g.connect(audio.destination);o.start();o.stop(audio.currentTime+d)}
-
 let keys={left:false,right:false,run:false,jump:false};
-let player,level,camera,particles=[];
-let game={score:0,coins:0,lives:3,world:'1-1',time:400,playing:false,win:false};
-
+let player,level,camera={x:0,y:0},particles=[],game={score:0,coins:0,lives:3,time:400,playing:false};
 let TILE=32;
-let levels={
-'1-1':{
-bg:'#5c94fc',
-data:[
-"                                                                                              ",
+
+let rawMap=[
 "                                                                                              ",
 "                                                                                              ",
 "                                                                                              ",
@@ -88,189 +52,64 @@ data:[
 "  c c                   ccc                                                                  c",
 " =====  b   e   ccc   =====   b   e    ===  ===    b  e   ===  ===  p  ===  ===  ===  =",
 "==============================================================================================",
-],
-enemies:[{x:400,y:300,type:'crab'},{x:700,y:300,type:'crab'},{x:900,y:300,type:'bee'},{x:1300,y:300,type:'crab'},{x:1800,y:300,type:'bee'}]
-}
-};
+];
+let enemiesData=[{x:400,y:300,type:'crab'},{x:700,y:300,type:'crab'},{x:900,y:300,type:'bee'},{x:1300,y:300,type:'crab'},{x:1800,y:300,type:'bee'}];
 
-function buildLevel(name){
-let raw=levels[name];
-let map=[];for(let y=0;y<raw.data.length;y++){map[y]=[];for(let x=0;x<raw.data[y].length;x++){map[y][x]=raw.data[y][x];}}
-level={map:map,w:map[0].length,h:map.length,bg:raw.bg,enemies:[]};
-raw.enemies.forEach(e=>{
-level.enemies.push({x:e.x,y:e.y,type:e.type,vx:-1,alive:true,dir:-1});
-});
+function buildLevel(){
+level={map:rawMap.map(r=>r.split('')),w:rawMap[0].length,h:rawMap.length,bg:'#5c94fc',enemies:[]};
+enemiesData.forEach(e=>level.enemies.push({x:e.x,y:300,type:e.type,vx:-1,alive:true,vy:0}));
 }
-
 function resetPlayer(){
-player={x:80,y:300,w:26,h:32,vx:0,vy:0,onGround:false,big:false,bigTime:0,dead:false,win:false,inv:0};
-camera={x:0,y:0};
-game.time=400;
+player={x:80,y:250,w:26,h:32,vx:0,vy:0,onGround:false,big:false,inv:0,dead:false,win:false};
+camera={x:0,y:0};game.time=400;
 }
+buildLevel();resetPlayer();
 
-function rect(x,y,w,h,col){ctx.fillStyle=col;ctx.fillRect(x,y,w,h);ctx.strokeStyle='#000';ctx.lineWidth=2;ctx.strokeRect(x,y,w,h);}
-
-function drawTile(x,y,ch){
-let px=x*TILE-camera.x,py=y*TILE-camera.y;
-if(px<-40||px>canvas.width+40)return;
-if(ch==='='){// ground
-rect(px,py,TILE,TILE,'#00a800');
-rect(px,py,TILE,8,'#00d000');
-ctx.fillStyle='#000';ctx.fillRect(px+6,py+10,6,6);ctx.fillRect(px+18,py+10,6,6);
-}
-else if(ch==='c'){// coconut coin
-let bob=Math.sin(Date.now()*0.005+x)*4;
-ctx.font='24px Arial';ctx.textAlign='center';ctx.fillText('🥥',px+TILE/2,py+TILE/2+8+bob);
-}
-else if(ch==='b'){// banana mushroom
-let bob=Math.sin(Date.now()*0.004+x)*3;
-ctx.font='24px Arial';ctx.textAlign='center';ctx.fillText('🍌',px+TILE/2,py+TILE/2+8+bob);
-}
-else if(ch==='e'){// brick
-rect(px,py,TILE,TILE,'#e58a00');
-ctx.fillStyle='#000';ctx.fillRect(px+2,py+2,TILE-4,4);ctx.fillRect(px+2,py+12,TILE-4,4);
-}
-else if(ch==='p'){// pipe
-rect(px,py,TILE,TILE*2,'#00a800');rect(px-4,py,TILE+8,10,'#00a800');
-}
-}
+function overlap(a,x,y,w,h){return a.x<x+w&&a.x+a.w>x&&a.y<y+h&&a.y+a.h>y;}
 
 function update(){
-if(!game.playing)return;
-if(!player.dead&&!player.win)game.time-=0.02;
-if(game.time<=0){die();return;}
+if(!game.playing||player.dead||player.win)return;
+game.time-=0.02;if(game.time<=0){die();return;}
 let speed=keys.run?3.5:2.2;
-if(keys.left)player.vx=-speed;else if(keys.right)player.vx=speed;else player.vx*=0.75;
+if(keys.left)player.vx=-speed;else if(keys.right)player.vx=speed;else player.vx*=0.8;
 if(Math.abs(player.vx)<0.1)player.vx=0;
-
-player.vy+=0.55;// gravity
-if(keys.jump&&player.onGround){player.vy=-11-(keys.run?2:0);player.onGround=false;beep(400,0.15,'square',0.4);setTimeout(()=>beep(600,0.1),80);}
-
-player.x+=player.vx;
-checkX();
-player.y+=player.vy;
-player.onGround=false;
-checkY();
-
-// camera follow mario style
-camera.x=player.x-canvas.width/3;
-if(camera.x<0)camera.x=0;
-if(camera.x>level.w*TILE-canvas.width)camera.x=level.w*TILE-canvas.width;
-
-// collect
+player.vy+=0.6;
+if(keys.jump&&player.onGround){player.vy=-12-(keys.run?2:0);player.onGround=false;}
+player.x+=player.vx;checkX();player.y+=player.vy;player.onGround=false;checkY();
+camera.x=player.x-canvas.width/3;if(camera.x<0)camera.x=0;if(camera.x>level.w*TILE-canvas.width)camera.x=level.w*TILE-canvas.width;
 let tx=Math.floor((player.x+player.w/2)/TILE),ty=Math.floor((player.y+player.h/2)/TILE);
-for(let y=Math.max(0,ty-2);y<=Math.min(level.h-1,ty+2);y++){
-for(let x=Math.max(0,tx-2);x<=Math.min(level.w-1,tx+2);x++){
+for(let y=Math.max(0,ty-2);y<Math.min(level.h-1,ty+2);y++)for(let x=Math.max(0,tx-2);x<Math.min(level.w-1,tx+2);x++){
 let ch=level.map[y][x];
-if(ch==='c'&&overlap(player,x*TILE,y*TILE,TILE,TILE)){level.map[y][x]=' ';game.coins++;game.score+=100;beep(800,0.12,'sine',0.5);setTimeout(()=>beep(1200,0.15),60);if(game.coins>=100){game.coins=0;game.lives++;beep(523,0.2);setTimeout(()=>beep(659,0.2),120);setTimeout(()=>beep(784,0.4),240);}spawnPop(x*TILE,y*TILE,'+100');}
-if(ch==='b'&&overlap(player,x*TILE,y*TILE,TILE,TILE)){level.map[y][x]=' ';player.big=true;player.bigTime=600;game.score+=500;beep(300,0.15);setTimeout(()=>beep(500,0.15),100);setTimeout(()=>beep(700,0.3),200);spawnPop(x*TILE,y*TILE,'POWER!');}
-if(ch==='p'&&overlap(player,x*TILE,y*TILE,TILE,TILE*2)){win();}
+if(ch==='c'&&overlap(player,x*TILE,y*TILE,TILE,TILE)){level.map[y][x]=' ';game.coins++;game.score+=100;particles.push({x:x*TILE,y:y*TILE,t:'+100',life:60});if(game.coins>=100){game.coins=0;game.lives++;}}
+if(ch==='b'&&overlap(player,x*TILE,y*TILE,TILE,TILE)){level.map[y][x]=' ';player.big=true;game.score+=500;particles.push({x:x*TILE,y:y*TILE,t:'POWER!',life:60});}
 }
-}
-
-// enemies
-level.enemies.forEach(en=>{
-if(!en.alive)return;
-en.x+=en.vx;
-en.vy=(en.vy||0)+0.5;en.y+=en.vy;
-// ground check for enemy
-let ex=Math.floor(en.x/TILE),ey=Math.floor((en.y+24)/TILE);
-if(level.map[ey]&&level.map[ey][ex]==='=' ){en.y=ey*TILE-24;en.vy=0;}else if(level.map[ey+1]&&level.map[ey+1][ex]===' '){en.vx*=-1;}
-// hit player
-if(!player.dead&&overlap(player,en.x,en.y,28,24)){
-if(player.vy>0&&player.y+player.h<en.y+18){// stomp
-en.alive=false;player.vy=-8;game.score+=200;beep(200,0.1,'square');setTimeout(()=>beep(400,0.2),80);spawnPop(en.x,en.y,'200');
-}else{
-if(player.big){player.big=false;player.inv=120;beep(150,0.4,'sawtooth');}else{die();}
-}
-}
-});
-
+level.enemies.forEach(en=>{if(!en.alive)return;en.x+=en.vx;en.vy+=0.5;en.y+=en.vy;let ex=Math.floor(en.x/TILE),ey=Math.floor((en.y+24)/TILE);if(level.map[ey]&&level.map[ey][ex]==='='){en.y=ey*TILE-24;en.vy=0;}if(overlap(player,en.x,en.y,28,24)){if(player.vy>0&&player.y+player.h<en.y+18){en.alive=false;player.vy=-8;game.score+=200;particles.push({x:en.x,y:en.y,t:'200',life:60});}else{if(player.big&&player.inv<=0){player.big=false;player.inv=120;}else if(player.inv<=0){die();}}}});
+if(player.inv>0)player.inv--;
 if(player.y>level.h*TILE+100)die();
-if(player.x>level.w*TILE-100)win();
-
-document.getElementById('score').textContent=game.score;
-document.getElementById('coins').textContent=game.coins;
-document.getElementById('lives').textContent=game.lives;
-document.getElementById('time').textContent=Math.floor(game.time);
-document.getElementById('world').textContent=game.world;
+if(player.x>level.w*TILE-80)win();
+document.getElementById('score').textContent=game.score;document.getElementById('coins').textContent=game.coins;document.getElementById('lives').textContent=game.lives;document.getElementById('time').textContent=Math.floor(game.time);
 }
-
-function overlap(a,x,y,w,h){return a.x<a.x+a.w&&a.x+a.w>x&&a.y<a.y+a.h&&a.y+a.h>y?true:a.x<x+w&&a.x+a.w>x&&a.y<y+h&&a.y+a.h>y;}
-
-function checkX(){
-let left=Math.floor(player.x/TILE),right=Math.floor((player.x+player.w)/TILE),top=Math.floor(player.y/TILE),bottom=Math.floor((player.y+player.h-1)/TILE);
-for(let y=top;y<=bottom;y++){
-for(let x=left;x<=right;x++){
-if(level.map[y]&&level.map[y][x]==='='||level.map[y]&&level.map[y][x]==='e'||level.map[y]&&level.map[y][x]==='p'){
-if(player.vx>0){player.x=x*TILE-player.w-0.1;}else if(player.vx<0){player.x=(x+1)*TILE+0.1;}player.vx=0;
-}
-}
-}
-}
-function checkY(){
-let left=Math.floor(player.x/TILE),right=Math.floor((player.x+player.w)/TILE),top=Math.floor(player.y/TILE),bottom=Math.floor((player.y+player.h)/TILE);
-for(let y=top;y<=bottom;y++){
-for(let x=left;x<=right;x++){
-if(level.map[y]&&level.map[y][x]==='='||level.map[y]&&level.map[y][x]==='e'||level.map[y]&&level.map[y][x]==='p'){
-if(player.vy>0){player.y=y*TILE-player.h;player.vy=0;player.onGround=true;}else if(player.vy<0){player.y=(y+1)*TILE;player.vy=0;}
-}
-}
-}
-}
-
-function spawnPop(x,y,t){particles.push({x:x,y:y,t:t,life:60});}
+function checkX(){let l=Math.floor(player.x/TILE),r=Math.floor((player.x+player.w)/TILE),t=Math.floor(player.y/TILE),b=Math.floor((player.y+player.h-1)/TILE);for(let y=t;y<=b;y++)for(let x=l;x<=r;x++)if(level.map[y]&&('=ep'.includes(level.map[y][x]))){if(player.vx>0)player.x=x*TILE-player.w-0.1;else if(player.vx<0)player.x=(x+1)*TILE+0.1;player.vx=0;}}
+function checkY(){let l=Math.floor(player.x/TILE),r=Math.floor((player.x+player.w)/TILE),t=Math.floor(player.y/TILE),b=Math.floor((player.y+player.h)/TILE);for(let y=t;y<=b;y++)for(let x=l;x<=r;x++)if(level.map[y]&&('=ep'.includes(level.map[y][x]))){if(player.vy>0){player.y=y*TILE-player.h;player.vy=0;player.onGround=true;}else if(player.vy<0){player.y=(y+1)*TILE;player.vy=0;}}}
 
 function draw(){
 ctx.fillStyle=level.bg;ctx.fillRect(0,0,canvas.width,canvas.height);
-// clouds
-ctx.fillStyle='#fff';for(let i=0;i<8;i++){let cx=(i*400-camera.x*0.3)%(canvas.width+200)-50,cy=60+Math.sin(i)*20;ctx.fillRect(cx,cy,60,20);ctx.fillRect(cx+10,cy-10,40,20);}
-// map
-for(let y=0;y<level.h;y++)for(let x=0;x<level.w;x++)drawTile(x,y,level.map[y][x]);
-// enemies
-level.enemies.forEach(en=>{
-if(!en.alive)return;
-let px=en.x-camera.x,py=en.y-camera.y;
-if(px<-50||px>canvas.width+50)return;
-if(en.type==='crab'){ctx.font='28px Arial';ctx.fillText('🦀',px,py+22);}
-else{ctx.font='28px Arial';ctx.fillText('🐝',px,py+22);}
-});
-// player
+for(let y=0;y<level.h;y++)for(let x=0;x<level.w;x++){let ch=level.map[y][x];let px=x*TILE-camera.x,py=y*TILE-camera.y;if(px<-40||px>canvas.width+40)continue;if(ch==='='){ctx.fillStyle='#00a800';ctx.fillRect(px,py,TILE,TILE);ctx.fillStyle='#00d000';ctx.fillRect(px,py,TILE,8);ctx.strokeStyle='#000';ctx.lineWidth=2;ctx.strokeRect(px,py,TILE,TILE);}else if(ch==='e'){ctx.fillStyle='#e58a00';ctx.fillRect(px,py,TILE,TILE);ctx.strokeRect(px,py,TILE,TILE);}else if(ch==='p'){ctx.fillStyle='#00a800';ctx.fillRect(px,py,TILE,TILE*2);ctx.fillRect(px-4,py,TILE+8,10);}else if(ch==='c'){let bob=Math.sin(Date.now()*0.005+x)*4;ctx.font='24px Arial';ctx.textAlign='center';ctx.fillText('🥥',px+TILE/2,py+TILE/2+8+bob);}else if(ch==='b'){let bob=Math.sin(Date.now()*0.004+x)*3;ctx.font='24px Arial';ctx.textAlign='center';ctx.fillText('🍌',px+TILE/2,py+TILE/2+8+bob);}}
+level.enemies.forEach(en=>{if(!en.alive)return;let px=en.x-camera.x,py=en.y-camera.y;if(px<-50||px>canvas.width+50)return;ctx.font='28px Arial';ctx.fillText(en.type==='crab'?'🦀':'🐝',px,py+22);});
 let px=player.x-camera.x,py=player.y-camera.y;
-if(player.inv%10<5||player.inv===0){
-let emoji=player.big?'🦧':'🐒';
-if(player.vx!==0){emoji=player.vx>0?'🐒':'🐒';}
-if(!player.onGround)emoji='🙈';
-ctx.font=(player.big?36:28)+'px Arial';ctx.textAlign='center';ctx.fillText(emoji,px+player.w/2,py+player.h-2);
-if(player.big){ctx.font='16px Arial';ctx.fillText('⭐',px+player.w/2,py-6);}
-}
-// particles
-particles.forEach((p,i)=>{ctx.fillStyle=`rgba(0,0,0,${p.life/60})`;ctx.font='14px Arial Black';ctx.fillText(p.t,p.x-camera.x,p.y-camera.y-p.life*0.5);p.life--;if(p.life<=0)particles.splice(i,1);});
-// flag
-let flagX=level.w*TILE-120-camera.x;if(flagX>-100&&flagX<canvas.width){rect(flagX,50,8,level.h*TILE-50-32,'#fff');ctx.font='24px Arial';ctx.fillText('🚩',flagX-10,60);ctx.fillText('🏁',level.w*TILE-60-camera.x,level.h*TILE-40);}
+if(player.inv%10<5){let e=player.big?'🦧':'🐒';if(!player.onGround)e='🙈';ctx.font=(player.big?36:28)+'px Arial';ctx.textAlign='center';ctx.fillText(e,px+player.w/2,py+player.h-2);}
+particles.forEach((p,i)=>{ctx.fillStyle='rgba(0,0,0,'+(p.life/60)+')';ctx.font='bold 14px Arial';ctx.fillText(p.t,p.x-camera.x,p.y-camera.y);p.y-=1;p.life--;if(p.life<=0)particles.splice(i,1);});
+let flagX=level.w*TILE-60-camera.x;ctx.font='30px Arial';ctx.fillText('🚩🏁',flagX,level.h*TILE-40-camera.y);
 }
 
-function loop(){update();draw();requestAnimationFrame(loop);}
-loop();
+function loop(){update();draw();requestAnimationFrame(loop);}loop();
+function die(){player.dead=true;game.lives--;setTimeout(()=>{if(game.lives<=0){game.playing=false;document.getElementById('menu').style.display='flex';document.getElementById('menu').innerHTML=`<div class="card"><div style="font-size:50px">💀</div><h1>GAME OVER!</h1><p>Score ${game.score}</p><button class="b b-yellow" onclick="location.reload()">🔁 MAIN LAGI</button></div>`;}else{resetPlayer();buildLevel();}},600);}
+function win(){player.win=true;game.score+=Math.floor(game.time)*2+1000;game.playing=false;document.getElementById('menu').style.display='flex';document.getElementById('menu').innerHTML=`<div class="card"><div style="font-size:50px">🏆</div><h1>MENANG!</h1><p>Score ${game.score}</p><button class="b b-yellow" onclick="share()">📲 SHARE</button><button class="b" onclick="location.reload()">🔁 LAGI</button></div>`;}
 
-function die(){
-if(player.dead)return;player.dead=true;game.lives--;beep(150,0.6,'sawtooth',0.5);
-setTimeout(()=>{
-if(game.lives<=0){document.getElementById('menu').style.display='flex';document.getElementById('menu').innerHTML=`<div class="card"><div style="font-size:60px">💀</div><h1>GAME OVER!</h1><p>Score ${game.score} - Sampai ${game.world}</p><button class="b b-yellow" onclick="location.reload()">🔁 MAIN LAGI</button></div>`;game.playing=false;}
-else{resetPlayer();buildLevel(game.world);game.playing=true;}
-},800);
-}
-function win(){
-if(player.win)return;player.win=true;game.score+=Math.floor(game.time)*2+1000;beep(523,0.15);setTimeout(()=>beep(659,0.15),120);setTimeout(()=>beep(784,0.15),240);setTimeout(()=>beep(1046,0.5),360);
-setTimeout(()=>{
-document.getElementById('menu').style.display='flex';
-document.getElementById('menu').innerHTML=`<div class="card"><div style="font-size:60px">🏆🎉</div><h1>MENANG! BETUL BETUL!</h1><p>Score ${game.score} • Koin ${game.coins} • Waktu sisa ${Math.floor(game.time)}</p><button class="b b-yellow" onclick="share()">📲 SHARE KE KAWAN!</button><button class="b" onclick="location.reload()">🔁 MAIN LAGI</button></div>`;
-game.playing=false;
-},800);
-}
-
-window.start=function(){audioInit();document.getElementById('menu').style.display='none';buildLevel('1-1');resetPlayer();game.playing=true;beep(400,0.1);setTimeout(()=>beep(600,0.1),100);setTimeout(()=>beep(800,0.2),200);}
-window.share=function(){let t=`🐒 AKU MENANG SUPER MONYET BROS! Score ${game.score}! Kalahkan aku kalau berani! 👉 https://amedenai.github.io/monyet-kelapa-3d/ #MonyetBros #MarioMonyet`;window.open(`https://wa.me/?text=${encodeURIComponent(t)}`,'_blank')}
+function startGame(){buildLevel();resetPlayer();game.playing=true;document.getElementById('menu').style.display='none';}
+document.getElementById('playBtn').addEventListener('click',startGame);
+document.getElementById('playBtn').addEventListener('touchstart',function(e){e.preventDefault();startGame();},{passive:false});
+window.share=function(){let t=`🐒 AKU MENANG MONYET BROS! Score ${game.score}! 👉 https://amedenai.github.io/monyet-kelapa-3d/`;window.open(`https://wa.me/?text=${encodeURIComponent(t)}`,'_blank')};
 
 function bind(id,key){let el=document.getElementById(id);let on=e=>{e.preventDefault();keys[key]=true;};let off=e=>{e.preventDefault();keys[key]=false;};el.addEventListener('touchstart',on,{passive:false});el.addEventListener('touchend',off,{passive:false});el.addEventListener('mousedown',on);el.addEventListener('mouseup',off);el.addEventListener('mouseleave',off);}
 bind('left','left');bind('right','right');bind('run','run');bind('jump','jump');
