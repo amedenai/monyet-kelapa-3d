@@ -3,250 +3,279 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>MONYET KELAPA VIRAL 🐒 - 99% Orang Gagal Sampai Puncak!</title>
-<script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js"}}</script>
+<title>MONYET BROS 🐒🍄 - Super Coconut Adventure</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;user-select:none;-webkit-tap-highlight-color:transparent}
-body{background:#000;overflow:hidden;font-family:'Arial Black',system-ui;touch-action:none}
-#game{position:fixed;inset:0}
-#hud{position:fixed;top:0;left:0;right:0;padding:10px;display:flex;justify-content:space-between;z-index:10;pointer-events:none}
-.badge{background:#fff;border:3px solid #000;border-radius:100px;padding:8px 14px;font-size:13px;box-shadow:4px 4px 0 #000;font-weight:900}
-#combo{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);z-index:20;pointer-events:none;font-size:42px;color:#facc15;text-shadow:4px 4px 0 #000;transition:0.2s cubic-bezier(.175,.885,.32,1.275)}
-#barWrap{position:fixed;top:56px;left:10px;right:10px;height:16px;background:#000;border-radius:20px;padding:3px;z-index:10;border:2px solid #fff}
-#bar{height:100%;width:100%;border-radius:20px;background:linear-gradient(90deg,#00ff88,#ffff00,#ff4444);transition:width 0.15s,background 0.3s}
-#touch{position:fixed;inset:0;z-index:5}
-#leftZone{position:fixed;left:0;top:0;bottom:0;width:35%;z-index:6}
-#rightZone{position:fixed;right:0;top:0;bottom:0;width:35%;z-index:6}
-#climbZone{position:fixed;left:35%;right:35%;top:0;bottom:0;z-index:6}
-#centerHint{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.8);color:#fff;padding:8px 16px;border-radius:20px;font-size:11px;z-index:7;pointer-events:none;animation:bounce 1s infinite}
-@keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-8px)}}
-#menu{position:fixed;inset:0;z-index:100;background:radial-gradient(circle at 50% 0%,#facc15 0%,#f59e0b 30%,#dc2626 70%,#000 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;text-align:center}
-.card{background:#fff;border:4px solid #000;border-radius:28px;padding:18px;max-width:360px;width:100%;box-shadow:8px 8px 0 #000}
-.btn{width:100%;padding:16px;border-radius:100px;border:4px solid #000;background:#000;color:#fff;font-size:18px;font-weight:900;box-shadow:0 6px 0 #444;margin-top:10px}
-.btn:active{transform:translateY(4px);box-shadow:0 2px 0 #444}
-.btn-yellow{background:#facc15;color:#000}
-.skins{display:flex;gap:8px;overflow-x:auto;padding:8px 0}
-.skin{flex:0 0 70px;background:#fff;border:3px solid #000;border-radius:16px;padding:6px;text-align:center;font-size:10px}
-.skin.active{border-color:#facc15;background:#fef08a;transform:scale(1.05)}
-#fail{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.9);display:none;flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center;color:#fff}
+body{background:#5c94fc;overflow:hidden;font-family:'Arial Black',monospace;touch-action:none}
+#c{display:block;width:100vw;height:100vh;image-rendering:pixelated}
+#hud{position:fixed;top:0;left:0;right:0;padding:8px;display:flex;justify-content:space-between;z-index:10;pointer-events:none;color:#fff;text-shadow:2px 2px 0 #000;font-size:14px}
+#controls{position:fixed;bottom:10px;left:10px;right:10px;display:flex;justify-content:space-between;z-index:10}
+.btn{width:70px;height:70px;border-radius:14px;background:rgba(255,255,255,0.85);border:3px solid #000;display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:0 6px 0 #000}
+.btn:active{transform:translateY(4px);box-shadow:0 2px 0 #000}
+#rightCtr{display:flex;gap:10px}
+#jump{width:90px;height:90px;border-radius:50%;background:#ff4444;color:#fff}
+#menu{position:fixed;inset:0;z-index:100;background:linear-gradient(#5c94fc 0%,#00d000 80%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;text-align:center}
+.card{background:#fff;border:4px solid #000;border-radius:20px;padding:16px;max-width:360px;width:100%;box-shadow:8px 8px 0 #000}
+.b{width:100%;padding:14px;border-radius:12px;border:3px solid #000;background:#ff0000;color:#fff;font-weight:900;font-size:18px;margin-top:8px;box-shadow:0 5px 0 #000}
+.b:active{transform:translateY(4px);box-shadow:0 1px 0 #000}
+.b-yellow{background:#ffcc00;color:#000}
 </style>
 </head>
 <body>
-<div id="game"></div>
+<canvas id="c"></canvas>
 <div id="hud">
-<div class="badge">⬆️ <span id="h">0</span>M</div>
-<div class="badge" id="speedBadge">🐢 PELAN</div>
-<div class="badge">⭐ <span id="s">0</span></div>
+<div>🌍 <span id="world">1-1</span> ⏱️ <span id="time">400</span></div>
+<div>⭐ <span id="score">0</span> 🥥 <span id="coins">0</span> ❤️ <span id="lives">3</span></div>
 </div>
-<div id="barWrap"><div id="bar"></div></div>
-<div id="combo">COMBO x2!</div>
-<div id="touch"></div>
-<div id="leftZone"></div><div id="rightZone"></div><div id="climbZone"></div>
-<div id="centerHint">👆 TAHAN TENGAH UNTUK MANJAT! GESER KIRI KANAN HINDARI!</div>
+<div id="controls">
+<div style="display:flex;gap:10px">
+<div class="btn" id="left">◀️</div>
+<div class="btn" id="right">▶️</div>
+</div>
+<div id="rightCtr">
+<div class="btn" id="run">💨</div>
+<div class="btn" id="jump">⤴️</div>
+</div>
+</div>
 
 <div id="menu">
-<div style="font-size:70px;animation:bounce 0.6s infinite">🐒🌴</div>
-<h1 style="font-size:32px;line-height:0.9;color:#000;text-shadow:3px 3px 0 #fff">99% ORANG<br>GAGAL!<br><span style="background:#000;color:#facc15;padding:0 8px;border-radius:10px">MONYET VIRAL</span></h1>
-<div class="card" style="margin-top:12px">
-<div style="font-size:12px;font-weight:800;line-height:1.3">🔥 Game paling bikin emosi se-Indonesia! Tahan 1 jari manjat, lepas untuk ngesot! Suara Upin Ipin asli!</div>
-<div style="display:flex;gap:6px;margin:10px 0">
-<div style="flex:1;background:#000;color:#fff;border-radius:12px;padding:6px;font-size:10px">😱 Near-miss<br>slow-mo!</div>
-<div style="flex:1;background:#000;color:#fff;border-radius:12px;padding:6px;font-size:10px">🎵 Musik makin<br>kencang!</div>
-<div style="flex:1;background:#000;color:#fff;border-radius:12px;padding:6px;font-size:10px">👑 Skin<br>rahasia!</div>
+<div style="font-size:60px">🐒🍄🌴</div>
+<h1 style="font-size:28px;color:#fff;text-shadow:4px 4px 0 #000;line-height:0.9">SUPER<br>MONYET<br>BROS</h1>
+<div class="card" style="margin-top:10px">
+<div style="font-size:12px;font-weight:800;line-height:1.3">🍄 Selamat datang di Pulau Kelapa! Kiko si Monyet harus selamatkan pisang emas dari Raja Kepiting!</div>
+<div style="text-align:left;font-size:11px;margin:10px 0;background:#000;color:#fff;padding:8px;border-radius:10px">
+🟡 🥥 = KOIN (100 = ❤️)<br>
+🍌 PISANG = JAMUR SUPER<br>
+🦀 INJAK MUSUH = MATI<br>
+🚩 BENDERA = MENANG!<br>
 </div>
-<div style="font-size:11px;text-align:left;font-weight:700">PILIH SKIN:</div>
-<div class="skins" id="skins">
-<div class="skin active" data-skin="upin">🐒<br>Upin<br>⭐FREE</div>
-<div class="skin" data-skin="ipin">🐵<br>Ipin<br>500⭐</div>
-<div class="skin" data-skin="opah">🦧<br>Opah<br>1000⭐</div>
-<div class="skin" data-skin="fizi">🙊<br>Fizi<br>2000⭐</div>
-</div>
-<button class="btn btn-yellow" onclick="play()">🔥 MAIN SEKARANG - GRATIS!</button>
-<div style="font-size:10px;margin-top:8px;opacity:0.7">👑 Top Hari Ini: @amedenai - 2840m • 1.2M orang sudah main</div>
+<button class="b b-yellow" onclick="start()">▶️ MULAI PETUALANGAN!</button>
+<div style="font-size:10px;margin-top:6px">Kontrol: Geser kiri kanan + Loncat! Tahan RUN untuk lari cepat!</div>
 </div>
 </div>
 
-<div id="fail">
-<div style="font-size:80px">💥</div>
-<h1 style="font-size:36px" id="failTitle">ALAMAK!</h1>
-<p id="failMsg" style="margin:10px 0">Kamu jatuh di 12m!</p>
-<div class="card" style="color:#000">
-<div style="font-size:28px;font-weight:900" id="finalScore">⭐ 420</div>
-<div style="font-size:12px" id="finalStats">🥥 8 🍌 5 • Combo x3</div>
-<button class="btn btn-yellow" onclick="shareWA()">📲 SHARE KE WA - PAMER SKOR!</button>
-<button class="btn" onclick="location.reload()">🔁 COBA LAGI - BALAS DENDAM!</button>
-</div>
-</div>
+<script>
+let canvas=document.getElementById('c'),ctx=canvas.getContext('2d');
+function resize(){canvas.width=innerWidth*2;canvas.height=innerHeight*2;canvas.style.width=innerWidth+'px';canvas.style.height=innerHeight+'px';ctx.imageSmoothingEnabled=false;}
+resize();addEventListener('resize',resize);
 
-<script type="module">
-import * as THREE from 'three';
-let scene,camera,renderer,clock,tree,monkey,leaves;
-let obstacles=[],collects=[],effects=[];
-let S={h:0,stam:100,score:0,coco:0,banana:0,combo:0,maxCombo:0,side:0,climbing:false,falling:false,playing:false,speed:0.12,skin:'upin'};
-let input={l:false,r:false,c:false};
-let audio;
-function audioInit(){audio=new(window.AudioContext||window.webkitAudioContext)()}
-function snd(f,d,t='sine',v=0.35){if(!audio)return;let o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.setValueAtTime(v,audio.currentTime);g.gain.exponentialRampToValueAtTime(0.001,audio.currentTime+d);o.connect(g);g.connect(audio.destination);o.start();o.stop(audio.currentTime+d)}
+let audio=null;function audioInit(){audio=new(window.AudioContext||window.webkitAudioContext)()}
+function beep(f,d,t='square',v=0.3){if(!audio)return;let o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.setValueAtTime(v,audio.currentTime);g.gain.exponentialRampToValueAtTime(0.001,audio.currentTime+d);o.connect(g);g.connect(audio.destination);o.start();o.stop(audio.currentTime+d)}
 
-scene=new THREE.Scene();scene.fog=new THREE.Fog(0x22c55e,12,80);clock=new THREE.Clock();
-camera=new THREE.PerspectiveCamera(72,innerWidth/innerHeight,0.1,200);camera.position.set(0,2.5,6.5);
-renderer=new THREE.WebGLRenderer({antialias:true});renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(Math.min(devicePixelRatio,1.8));renderer.shadowMap.enabled=true;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.3;
-document.getElementById('game').appendChild(renderer.domElement);
+let keys={left:false,right:false,run:false,jump:false};
+let player,level,camera,particles=[];
+let game={score:0,coins:0,lives:3,world:'1-1',time:400,playing:false,win:false};
 
-// LIGHTS
-scene.add(new THREE.AmbientLight(0xffffff,0.85));
-let sun=new THREE.DirectionalLight(0xffffff,1.8);sun.position.set(10,25,10);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);scene.add(sun);
+let TILE=32;
+let levels={
+'1-1':{
+bg:'#5c94fc',
+data:[
+"                                                                                              ",
+"                                                                                              ",
+"                                                                                              ",
+"                                                                                              ",
+"                                                                                              ",
+"                                                          c c                              ",
+"                                                         ======                              ",
+"                                                                                              ",
+"                                ccc                                                          ",
+"                               ======                                                        ",
+"                                                                                              ",
+"           c    c         b    e         c   b    ccc      b      c                          ",
+"          ==   ==        ==   ===       ==  ==   ====     ==     ==                          ",
+"                                                                                              ",
+"  c c                   ccc                                                                  c",
+" =====  b   e   ccc   =====   b   e    ===  ===    b  e   ===  ===  p  ===  ===  ===  =",
+"==============================================================================================",
+],
+enemies:[{x:400,y:300,type:'crab'},{x:700,y:300,type:'crab'},{x:900,y:300,type:'bee'},{x:1300,y:300,type:'crab'},{x:1800,y:300,type:'bee'}]
+}
+};
 
-// GROUND
-let ground=new THREE.Mesh(new THREE.PlaneGeometry(300,300),new THREE.MeshStandardMaterial({color:0x4ade80,roughness:0.9}));ground.rotation.x=-Math.PI/2;ground.receiveShadow=true;scene.add(ground);
-
-// TREE MEGA
-tree=new THREE.Group();
-let trunk=new THREE.Mesh(new THREE.CylinderGeometry(0.42,0.7,38,14),new THREE.MeshStandardMaterial({color:0x7c4a03,roughness:0.8}));trunk.position.y=19;trunk.castShadow=true;tree.add(trunk);
-leaves=new THREE.Group();leaves.position.y=38;
-let leafColors=[0x22c55e,0x16a34a,0x4ade80];
-for(let i=0;i<10;i++){let g=new THREE.Group();let stem=new THREE.Mesh(new THREE.CylinderGeometry(0.06,0.14,3.8,5),new THREE.MeshStandardMaterial({color:0x365314}));stem.rotation.z=Math.PI/2.2;g.add(stem);for(let j=0;j<6;j++){let b=new THREE.Mesh(new THREE.PlaneGeometry(1.1,0.28),new THREE.MeshStandardMaterial({color:leafColors[j%3],side:THREE.DoubleSide}));b.position.set(0.4+j*0.55,0.1,0);b.rotation.z=0.2;g.add(b);}g.rotation.y=i/10*Math.PI*2;g.rotation.x=0.4;leaves.add(g);}tree.add(leaves);
-scene.add(tree);
-
-// MONKEY FACTORY - SKIN
-function buildMonkey(){
-if(monkey)scene.remove(monkey);
-monkey=new THREE.Group();
-let shirtCol={upin:0xfacc15,ipin:0x3b82f6,opah:0xa855f7,fizi:0xef4444}[S.skin];
-let body=new THREE.Mesh(new THREE.CapsuleGeometry(0.28,0.38,4,8),new THREE.MeshStandardMaterial({color:shirtCol}));body.position.y=0.3;body.castShadow=true;monkey.add(body);
-let head=new THREE.Mesh(new THREE.SphereGeometry(0.46,16,16),new THREE.MeshStandardMaterial({color:0xffdbac}));head.position.y=0.95;head.castShadow=true;monkey.add(head);
-let hair=new THREE.Mesh(new THREE.SphereGeometry(0.47,12,12,0,Math.PI*2,0,Math.PI*2.2),new THREE.MeshStandardMaterial({color:0x5d2f0a}));hair.position.y=1.05;hair.rotation.x=Math.PI;monkey.add(hair);
-let eye=(x)=>{let g=new THREE.Group();let w=new THREE.Mesh(new THREE.SphereGeometry(0.12,10,10),new THREE.MeshStandardMaterial({color:0xffffff}));let iris=new THREE.Mesh(new THREE.SphereGeometry(0.06,8,8),new THREE.MeshStandardMaterial({color:0x000}));iris.position.z=0.09;g.add(w,iris);g.position.set(x,1.02,0.38);return g;};monkey.add(eye(-0.15));monkey.add(eye(0.15));
-let arm=new THREE.Mesh(new THREE.CapsuleGeometry(0.07,0.32,4,6),new THREE.MeshStandardMaterial({color:0x6b3f1d}));arm.position.set(-0.36,0.32,0);monkey.add(arm);let arm2=arm.clone();arm2.position.x=0.36;monkey.add(arm2);
-let leg=new THREE.Mesh(new THREE.CapsuleGeometry(0.08,0.28,4,6),new THREE.MeshStandardMaterial({color:0x6b3f1d}));leg.position.set(-0.14,-0.18,0);monkey.add(leg);let leg2=leg.clone();leg2.position.x=0.14;monkey.add(leg2);
-monkey.position.set(0,1,0.75);monkey.scale.set(1.2,1.2,1.2);scene.add(monkey);
-}
-buildMonkey();
-
-// LEVEL - MAKIN SULIT MAKIN CEPAT = VIRAL!
-function build(){
-obstacles.forEach(o=>tree.remove(o));obstacles=[];collects.forEach(c=>tree.remove(c));collects=[];
-for(let y=3;y<40;y+=0.9+Math.random()*0.7){
-if(Math.random()<0.62){
-let t=Math.random()>0.5?'bee':'branch';
-let m;
-if(t==='branch'){m=new THREE.Mesh(new THREE.BoxGeometry(1.4+Math.random()*0.9,0.16,0.28),new THREE.MeshStandardMaterial({color:0x451a03}));m.position.set((Math.random()-0.5)*1.4,y,0.68);m.rotation.z=(Math.random()-0.5)*0.6;m.castShadow=true;}
-else{m=new THREE.Group();let b=new THREE.Mesh(new THREE.SphereGeometry(0.18,8,8),new THREE.MeshStandardMaterial({color:0xfacc15}));let wing=new THREE.Mesh(new THREE.SphereGeometry(0.12,6,6),new THREE.MeshStandardMaterial({color:0xffffff,transparent:true,opacity:0.7}));wing.position.x=0.15;let wing2=wing.clone();wing2.position.x=-0.15;m.add(b,wing,wing2);m.position.set((Math.random()-0.5)*1.2,y,0.72);m.userData.phase=Math.random()*10;}
-m.userData={type:t,y:y};obstacles.push(m);tree.add(m);
-}
-if(Math.random()<0.5){
-let isC=Math.random()>0.45;
-let c=new THREE.Mesh(new THREE.SphereGeometry(isC?0.21:0.16,10,10),new THREE.MeshStandardMaterial({color:isC?0x65a30d:0xfacc15,emissive:isC?0x000000:0xfacc15,emissiveIntensity:isC?0:0.2}));if(!isC)c.scale.set(1,1.5,1);
-c.position.set((Math.random()-0.5)*1,y+0.5,0.82);c.userData={type:isC?'coco':'banana',y:y,taken:false};c.castShadow=true;collects.push(c);tree.add(c);
-}
-}
-}
-build();
-
-// SKIN SELECTOR
-document.querySelectorAll('.skin').forEach(s=>s.addEventListener('click',()=>{document.querySelectorAll('.skin').forEach(x=>x.classList.remove('active'));s.classList.add('active');S.skin=s.dataset.skin;buildMonkey();snd(600,0.15)}))
-
-let lastNearMiss=0;
-function check(){
-for(let o of obstacles){
-if(!o.visible)continue;
-let dy=Math.abs(o.userData.y-S.h);
-if(dy<0.5 && Math.abs(o.position.x-S.side)<0.6){
-S.stam-=o.userData.type==='branch'?24:38;S.combo=0;
-o.visible=false;setTimeout(()=>o.visible=true,1800);
-shake=0.35;snd(o.userData.type==='branch'?90:220,0.4,o.userData.type==='branch'?'sawtooth':'square');
-if(S.stam<=0){S.falling=true;}
-}
-else if(dy<0.55 && Math.abs(o.position.x-S.side)<0.85 && performance.now()-lastNearMiss>600){
-lastNearMiss=performance.now();S.combo++;S.maxCombo=Math.max(S.maxCombo,S.combo);S.score+=10*S.combo;
-showCombo(`NEAR MISS! x${S.combo}`);snd(800,0.12,'triangle',0.5);timeScale=0.3;setTimeout(()=>timeScale=1,180);
-}
-}
-collects.forEach(c=>{
-if(c.userData.taken||!c.visible)return;
-if(Math.abs(c.userData.y-S.h)<0.65 && Math.abs(c.position.x-S.side)<0.65){
-c.userData.taken=true;c.visible=false;S.combo++;S.maxCombo=Math.max(S.maxCombo,S.combo);
-if(c.userData.type==='coco'){S.coco++;S.score+=100+20*S.combo;snd(523,0.12);setTimeout(()=>snd(784,0.15),70);setTimeout(()=>snd(1046,0.2),140);showCombo(`BETUL! +${100+20*S.combo}`);}
-else{S.banana++;S.score+=80+15*S.combo;S.stam=Math.min(100,S.stam+16);snd(660,0.12);setTimeout(()=>snd(880,0.15),70);showCombo(`SEDAP! +${80+15*S.combo}`);}
-S.stam=Math.min(100,S.stam+2);
-}
+function buildLevel(name){
+let raw=levels[name];
+let map=[];for(let y=0;y<raw.data.length;y++){map[y]=[];for(let x=0;x<raw.data[y].length;x++){map[y][x]=raw.data[y][x];}}
+level={map:map,w:map[0].length,h:map.length,bg:raw.bg,enemies:[]};
+raw.enemies.forEach(e=>{
+level.enemies.push({x:e.x,y:e.y,type:e.type,vx:-1,alive:true,dir:-1});
 });
 }
 
-function showCombo(t){let el=document.getElementById('combo');el.textContent=t;el.style.transform='translate(-50%,-50%) scale(1.2)';setTimeout(()=>el.style.transform='translate(-50%,-50%) scale(0)',500);}
-
-let shake=0,timeScale=1;
-function animate(){
-requestAnimationFrame(animate);
-let dt=clock.getDelta()*timeScale;let time=clock.elapsedTime;
-if(S.playing && !S.falling){
-if(S.climbing && S.stam>0){
-S.h+=S.speed*(1+S.h*0.03)*(1+S.combo*0.05);
-S.stam-=0.19+ S.h*0.002;
-monkey.rotation.y=Math.sin(time*15)*0.3;
-monkey.position.y=S.h+1+Math.sin(time*12)*0.05;
-S.speed=0.12+ S.h*0.004;
-let spdEl=document.getElementById('speedBadge');
-if(S.h<10){spdEl.textContent='🐢 PELAN';spdEl.style.background='#fff';}
-else if(S.h<20){spdEl.textContent='🐇 LUMAYAN!';spdEl.style.background='#facc15';}
-else if(S.h<30){spdEl.textContent='🚀 CEPAT!';spdEl.style.background='#fb923c';}
-else{spdEl.textContent='🔥 GILA!';spdEl.style.background='#ef4444';spdEl.style.color='#fff';}
-}
-if(input.l)S.side=Math.max(-1.25,S.side-0.085);
-if(input.r)S.side=Math.min(1.25,S.side+0.085);
-monkey.position.x=THREE.MathUtils.lerp(monkey.position.x,S.side,0.18);
-check();
-camera.position.y=THREE.MathUtils.lerp(camera.position.y,S.h+2.8,0.12);
-camera.position.x=THREE.MathUtils.lerp(camera.position.x,S.side*0.45,0.12);
-if(shake>0){camera.position.x+=(Math.random()-0.5)*shake;camera.position.y+=(Math.random()-0.5)*shake;shake*=0.9}
-camera.lookAt(S.side*0.2,S.h+1,0);
-document.getElementById('h').textContent=Math.floor(S.h);
-document.getElementById('s').textContent=S.score;
-document.getElementById('bar').style.width=S.stam+'%';
-if(S.stam<30)document.getElementById('bar').style.background='#ff4444';
-else if(S.stam<60)document.getElementById('bar').style.background='linear-gradient(90deg,#facc15,#ff4444)';
-else document.getElementById('bar').style.background='linear-gradient(90deg,#00ff88,#facc15)';
-
-if(S.h>=38){
-S.playing=false;
-document.getElementById('fail').style.display='flex';
-document.getElementById('failTitle').textContent='BETUL BETUL BETUL! 👑';
-document.getElementById('failMsg').textContent=`Kamu termasuk 1% yang sampai puncak! Tinggi ${Math.floor(S.h)}m!`;
-document.getElementById('finalScore').textContent=`⭐ ${S.score} • COMBO x${S.maxCombo}`;
-document.getElementById('finalStats').textContent=`🥥 ${S.coco} 🍌 ${S.banana} • Speed GILA!`;
-snd(523,0.2);setTimeout(()=>snd(659,0.2),120);setTimeout(()=>snd(784,0.2),240);setTimeout(()=>snd(1046,0.6),360);
-}
-}
-if(S.falling){
-S.h=Math.max(0,S.h-0.4);monkey.position.y=S.h+1;monkey.rotation.x+=0.3;monkey.rotation.z+=0.2;camera.position.y=S.h+2.8;camera.lookAt(0,S.h,0);
-document.getElementById('h').textContent=Math.floor(S.h);
-document.getElementById('bar').style.width=S.stam+'%';
-if(S.h<=0.2){S.falling=false;S.playing=false;
-document.getElementById('fail').style.display='flex';
-document.getElementById('failTitle').textContent=S.h>15?'ALAMAK DEKAT! 😭':'ADUH! 😵';
-document.getElementById('failMsg').textContent=S.h>15?`Dikit lagi! Kamu jatuh di ${Math.floor(S.h)}m - 99% orang juga gagal disini!`:`Kamu jatuh di ${Math.floor(S.h)}m! Coba lagi, pasti bisa!`;
-document.getElementById('finalScore').textContent=`⭐ ${S.score} • BEST x${S.maxCombo}`;
-document.getElementById('finalStats').textContent=`🥥 ${S.coco} 🍌 ${S.banana} • Skin ${S.skin}`;
-snd(120,0.5,'sawtooth');
-}
-}
-leaves.children.forEach((l,i)=>{l.rotation.y+=0.001*Math.sin(time+i);});
-obstacles.forEach(o=>{if(o.userData.type==='bee'){o.position.x+=Math.sin(time*2+o.userData.phase)*0.005;o.rotation.y+=0.05;}});
-collects.forEach(c=>{if(!c.userData.taken){c.rotation.y+=0.04;c.position.y=c.userData.y+0.5+Math.sin(time*2+c.position.x)*0.08;}});
-renderer.render(scene,camera);
-}
-animate();
-
-window.play=function(){audioInit();document.getElementById('menu').style.display='none';document.getElementById('centerHint').style.display='block';setTimeout(()=>document.getElementById('centerHint').style.display='none',4000);S.playing=true;snd(440,0.15);setTimeout(()=>snd(660,0.2),100)}
-window.shareWA=function(){
-let text=`🐒 AKU MAIN MONYET KELAPA VIRAL! Aku dapat ⭐ ${S.score} poin, tinggi ${Math.floor(S.h)}m, combo x${S.maxCombo}! 99% orang gagal loh! Kamu berani coba? 👉 https://amedenai.github.io/monyet-kelapa-3d/ #MonyetViral #UpinIpin`;
-let url=`https://wa.me/?text=${encodeURIComponent(text)}`;
-window.open(url,'_blank');
+function resetPlayer(){
+player={x:80,y:300,w:26,h:32,vx:0,vy:0,onGround:false,big:false,bigTime:0,dead:false,win:false,inv:0};
+camera={x:0,y:0};
+game.time=400;
 }
 
-function bind(zone,key){let on=e=>{e.preventDefault();input[key]=true;if(key==='c')S.climbing=true;};let off=e=>{e.preventDefault();input[key]=false;if(key==='c')S.climbing=false;};zone.addEventListener('touchstart',on,{passive:false});zone.addEventListener('touchend',off,{passive:false});zone.addEventListener('mousedown',on);zone.addEventListener('mouseup',off);zone.addEventListener('mouseleave',off);}
-bind(document.getElementById('leftZone'),'l');bind(document.getElementById('rightZone'),'r');bind(document.getElementById('climbZone'),'c');bind(document.getElementById('touch'),'c');
-addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
+function rect(x,y,w,h,col){ctx.fillStyle=col;ctx.fillRect(x,y,w,h);ctx.strokeStyle='#000';ctx.lineWidth=2;ctx.strokeRect(x,y,w,h);}
+
+function drawTile(x,y,ch){
+let px=x*TILE-camera.x,py=y*TILE-camera.y;
+if(px<-40||px>canvas.width+40)return;
+if(ch==='='){// ground
+rect(px,py,TILE,TILE,'#00a800');
+rect(px,py,TILE,8,'#00d000');
+ctx.fillStyle='#000';ctx.fillRect(px+6,py+10,6,6);ctx.fillRect(px+18,py+10,6,6);
+}
+else if(ch==='c'){// coconut coin
+let bob=Math.sin(Date.now()*0.005+x)*4;
+ctx.font='24px Arial';ctx.textAlign='center';ctx.fillText('🥥',px+TILE/2,py+TILE/2+8+bob);
+}
+else if(ch==='b'){// banana mushroom
+let bob=Math.sin(Date.now()*0.004+x)*3;
+ctx.font='24px Arial';ctx.textAlign='center';ctx.fillText('🍌',px+TILE/2,py+TILE/2+8+bob);
+}
+else if(ch==='e'){// brick
+rect(px,py,TILE,TILE,'#e58a00');
+ctx.fillStyle='#000';ctx.fillRect(px+2,py+2,TILE-4,4);ctx.fillRect(px+2,py+12,TILE-4,4);
+}
+else if(ch==='p'){// pipe
+rect(px,py,TILE,TILE*2,'#00a800');rect(px-4,py,TILE+8,10,'#00a800');
+}
+}
+
+function update(){
+if(!game.playing)return;
+if(!player.dead&&!player.win)game.time-=0.02;
+if(game.time<=0){die();return;}
+let speed=keys.run?3.5:2.2;
+if(keys.left)player.vx=-speed;else if(keys.right)player.vx=speed;else player.vx*=0.75;
+if(Math.abs(player.vx)<0.1)player.vx=0;
+
+player.vy+=0.55;// gravity
+if(keys.jump&&player.onGround){player.vy=-11-(keys.run?2:0);player.onGround=false;beep(400,0.15,'square',0.4);setTimeout(()=>beep(600,0.1),80);}
+
+player.x+=player.vx;
+checkX();
+player.y+=player.vy;
+player.onGround=false;
+checkY();
+
+// camera follow mario style
+camera.x=player.x-canvas.width/3;
+if(camera.x<0)camera.x=0;
+if(camera.x>level.w*TILE-canvas.width)camera.x=level.w*TILE-canvas.width;
+
+// collect
+let tx=Math.floor((player.x+player.w/2)/TILE),ty=Math.floor((player.y+player.h/2)/TILE);
+for(let y=Math.max(0,ty-2);y<=Math.min(level.h-1,ty+2);y++){
+for(let x=Math.max(0,tx-2);x<=Math.min(level.w-1,tx+2);x++){
+let ch=level.map[y][x];
+if(ch==='c'&&overlap(player,x*TILE,y*TILE,TILE,TILE)){level.map[y][x]=' ';game.coins++;game.score+=100;beep(800,0.12,'sine',0.5);setTimeout(()=>beep(1200,0.15),60);if(game.coins>=100){game.coins=0;game.lives++;beep(523,0.2);setTimeout(()=>beep(659,0.2),120);setTimeout(()=>beep(784,0.4),240);}spawnPop(x*TILE,y*TILE,'+100');}
+if(ch==='b'&&overlap(player,x*TILE,y*TILE,TILE,TILE)){level.map[y][x]=' ';player.big=true;player.bigTime=600;game.score+=500;beep(300,0.15);setTimeout(()=>beep(500,0.15),100);setTimeout(()=>beep(700,0.3),200);spawnPop(x*TILE,y*TILE,'POWER!');}
+if(ch==='p'&&overlap(player,x*TILE,y*TILE,TILE,TILE*2)){win();}
+}
+}
+
+// enemies
+level.enemies.forEach(en=>{
+if(!en.alive)return;
+en.x+=en.vx;
+en.vy=(en.vy||0)+0.5;en.y+=en.vy;
+// ground check for enemy
+let ex=Math.floor(en.x/TILE),ey=Math.floor((en.y+24)/TILE);
+if(level.map[ey]&&level.map[ey][ex]==='=' ){en.y=ey*TILE-24;en.vy=0;}else if(level.map[ey+1]&&level.map[ey+1][ex]===' '){en.vx*=-1;}
+// hit player
+if(!player.dead&&overlap(player,en.x,en.y,28,24)){
+if(player.vy>0&&player.y+player.h<en.y+18){// stomp
+en.alive=false;player.vy=-8;game.score+=200;beep(200,0.1,'square');setTimeout(()=>beep(400,0.2),80);spawnPop(en.x,en.y,'200');
+}else{
+if(player.big){player.big=false;player.inv=120;beep(150,0.4,'sawtooth');}else{die();}
+}
+}
+});
+
+if(player.y>level.h*TILE+100)die();
+if(player.x>level.w*TILE-100)win();
+
+document.getElementById('score').textContent=game.score;
+document.getElementById('coins').textContent=game.coins;
+document.getElementById('lives').textContent=game.lives;
+document.getElementById('time').textContent=Math.floor(game.time);
+document.getElementById('world').textContent=game.world;
+}
+
+function overlap(a,x,y,w,h){return a.x<a.x+a.w&&a.x+a.w>x&&a.y<a.y+a.h&&a.y+a.h>y?true:a.x<x+w&&a.x+a.w>x&&a.y<y+h&&a.y+a.h>y;}
+
+function checkX(){
+let left=Math.floor(player.x/TILE),right=Math.floor((player.x+player.w)/TILE),top=Math.floor(player.y/TILE),bottom=Math.floor((player.y+player.h-1)/TILE);
+for(let y=top;y<=bottom;y++){
+for(let x=left;x<=right;x++){
+if(level.map[y]&&level.map[y][x]==='='||level.map[y]&&level.map[y][x]==='e'||level.map[y]&&level.map[y][x]==='p'){
+if(player.vx>0){player.x=x*TILE-player.w-0.1;}else if(player.vx<0){player.x=(x+1)*TILE+0.1;}player.vx=0;
+}
+}
+}
+}
+function checkY(){
+let left=Math.floor(player.x/TILE),right=Math.floor((player.x+player.w)/TILE),top=Math.floor(player.y/TILE),bottom=Math.floor((player.y+player.h)/TILE);
+for(let y=top;y<=bottom;y++){
+for(let x=left;x<=right;x++){
+if(level.map[y]&&level.map[y][x]==='='||level.map[y]&&level.map[y][x]==='e'||level.map[y]&&level.map[y][x]==='p'){
+if(player.vy>0){player.y=y*TILE-player.h;player.vy=0;player.onGround=true;}else if(player.vy<0){player.y=(y+1)*TILE;player.vy=0;}
+}
+}
+}
+}
+
+function spawnPop(x,y,t){particles.push({x:x,y:y,t:t,life:60});}
+
+function draw(){
+ctx.fillStyle=level.bg;ctx.fillRect(0,0,canvas.width,canvas.height);
+// clouds
+ctx.fillStyle='#fff';for(let i=0;i<8;i++){let cx=(i*400-camera.x*0.3)%(canvas.width+200)-50,cy=60+Math.sin(i)*20;ctx.fillRect(cx,cy,60,20);ctx.fillRect(cx+10,cy-10,40,20);}
+// map
+for(let y=0;y<level.h;y++)for(let x=0;x<level.w;x++)drawTile(x,y,level.map[y][x]);
+// enemies
+level.enemies.forEach(en=>{
+if(!en.alive)return;
+let px=en.x-camera.x,py=en.y-camera.y;
+if(px<-50||px>canvas.width+50)return;
+if(en.type==='crab'){ctx.font='28px Arial';ctx.fillText('🦀',px,py+22);}
+else{ctx.font='28px Arial';ctx.fillText('🐝',px,py+22);}
+});
+// player
+let px=player.x-camera.x,py=player.y-camera.y;
+if(player.inv%10<5||player.inv===0){
+let emoji=player.big?'🦧':'🐒';
+if(player.vx!==0){emoji=player.vx>0?'🐒':'🐒';}
+if(!player.onGround)emoji='🙈';
+ctx.font=(player.big?36:28)+'px Arial';ctx.textAlign='center';ctx.fillText(emoji,px+player.w/2,py+player.h-2);
+if(player.big){ctx.font='16px Arial';ctx.fillText('⭐',px+player.w/2,py-6);}
+}
+// particles
+particles.forEach((p,i)=>{ctx.fillStyle=`rgba(0,0,0,${p.life/60})`;ctx.font='14px Arial Black';ctx.fillText(p.t,p.x-camera.x,p.y-camera.y-p.life*0.5);p.life--;if(p.life<=0)particles.splice(i,1);});
+// flag
+let flagX=level.w*TILE-120-camera.x;if(flagX>-100&&flagX<canvas.width){rect(flagX,50,8,level.h*TILE-50-32,'#fff');ctx.font='24px Arial';ctx.fillText('🚩',flagX-10,60);ctx.fillText('🏁',level.w*TILE-60-camera.x,level.h*TILE-40);}
+}
+
+function loop(){update();draw();requestAnimationFrame(loop);}
+loop();
+
+function die(){
+if(player.dead)return;player.dead=true;game.lives--;beep(150,0.6,'sawtooth',0.5);
+setTimeout(()=>{
+if(game.lives<=0){document.getElementById('menu').style.display='flex';document.getElementById('menu').innerHTML=`<div class="card"><div style="font-size:60px">💀</div><h1>GAME OVER!</h1><p>Score ${game.score} - Sampai ${game.world}</p><button class="b b-yellow" onclick="location.reload()">🔁 MAIN LAGI</button></div>`;game.playing=false;}
+else{resetPlayer();buildLevel(game.world);game.playing=true;}
+},800);
+}
+function win(){
+if(player.win)return;player.win=true;game.score+=Math.floor(game.time)*2+1000;beep(523,0.15);setTimeout(()=>beep(659,0.15),120);setTimeout(()=>beep(784,0.15),240);setTimeout(()=>beep(1046,0.5),360);
+setTimeout(()=>{
+document.getElementById('menu').style.display='flex';
+document.getElementById('menu').innerHTML=`<div class="card"><div style="font-size:60px">🏆🎉</div><h1>MENANG! BETUL BETUL!</h1><p>Score ${game.score} • Koin ${game.coins} • Waktu sisa ${Math.floor(game.time)}</p><button class="b b-yellow" onclick="share()">📲 SHARE KE KAWAN!</button><button class="b" onclick="location.reload()">🔁 MAIN LAGI</button></div>`;
+game.playing=false;
+},800);
+}
+
+window.start=function(){audioInit();document.getElementById('menu').style.display='none';buildLevel('1-1');resetPlayer();game.playing=true;beep(400,0.1);setTimeout(()=>beep(600,0.1),100);setTimeout(()=>beep(800,0.2),200);}
+window.share=function(){let t=`🐒 AKU MENANG SUPER MONYET BROS! Score ${game.score}! Kalahkan aku kalau berani! 👉 https://amedenai.github.io/monyet-kelapa-3d/ #MonyetBros #MarioMonyet`;window.open(`https://wa.me/?text=${encodeURIComponent(t)}`,'_blank')}
+
+function bind(id,key){let el=document.getElementById(id);let on=e=>{e.preventDefault();keys[key]=true;};let off=e=>{e.preventDefault();keys[key]=false;};el.addEventListener('touchstart',on,{passive:false});el.addEventListener('touchend',off,{passive:false});el.addEventListener('mousedown',on);el.addEventListener('mouseup',off);el.addEventListener('mouseleave',off);}
+bind('left','left');bind('right','right');bind('run','run');bind('jump','jump');
+addEventListener('keydown',e=>{if(e.code==='ArrowLeft')keys.left=true;if(e.code==='ArrowRight')keys.right=true;if(e.code==='Space'||e.code==='ArrowUp')keys.jump=true;if(e.code==='ShiftLeft')keys.run=true;});
+addEventListener('keyup',e=>{if(e.code==='ArrowLeft')keys.left=false;if(e.code==='ArrowRight')keys.right=false;if(e.code==='Space'||e.code==='ArrowUp')keys.jump=false;if(e.code==='ShiftLeft')keys.run=false;});
 </script>
 </body>
 </html>
